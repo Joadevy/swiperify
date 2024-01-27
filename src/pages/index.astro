@@ -15,16 +15,16 @@ import Card from '../components/Card.astro';
 				body="An app that allows you to find your next favorite song to add to your playlist."
 			/>
 			<Card
-				title="Integrations"
-				body="Supercharge your project with new frameworks and libraries."
+				title="Why spotynder?"
+				body="Because it&apos;s a mix of Spotify and Tinder. Swipe right to add to your playlist, swipe left to skip."
 			/>
 			<Card
-				title="Themes"
-				body="Explore a galaxy of community-built starter themes."
+				title="Why do I need to login?"
+				body="We need to know who you are so we can add songs to your playlist. We don&apos;t store any of your data."
 			/>
 			<Card
-				title="Community"
-				body="Come say hi to our amazing Discord community. ❤️"
+				title="Who made this?"
+				body={`Made with love by Joaquin Arlettaz ❤️`}
 			/>
 		</ul>
 	</main>
@@ -41,23 +41,24 @@ import Card from '../components/Card.astro';
 		line-height: 1.6;
 	}
 	h1 {
-		font-size: 4rem;
+		font-size: 5.5rem;
 		font-weight: 700;
 		line-height: 1;
 		text-align: center;
-		margin-bottom: 1em;
+		margin-bottom: 0.5em;
 	}
 	.text-gradient {
 		background-image: var(--accent-gradient);
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
-		background-size: 400%;
+		background-size: 350%;
 		background-position: 0%;
+		padding-bottom: 20px;
 	}
 	.instructions {
 		margin-bottom: 2rem;
 		border: 1px solid rgba(var(--accent-light), 25%);
-		background: linear-gradient(rgba(var(--accent-dark), 66%), rgba(var(--accent-dark), 33%));
+		background: linear-gradient(45deg, rgba(var(--accent-dark), 66%), rgba(var(--tinder-red), 30%));
 		padding: 1.5rem;
 		border-radius: 8px;
 	}
