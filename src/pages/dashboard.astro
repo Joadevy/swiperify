@@ -28,12 +28,24 @@ if (error) {
 }
 
 const user = await supabase.auth.getUser()
+
 console.log(user.data.user?.user_metadata)
-// const email = data?.user?.email;
+const user_id = user.data.user?.user_metadata.sub; // esto representa el user_id de SPOTIFY (con esto se pueden traer  playlists, etc)
+
+
+// TODO: Configurar en el callback de auth para que guardemos el access token de spotify en una cookie
+// const userplaylists = await fetch(`https://api.spotify.com/v1/users/${user_id}/playlists`,{
+//     headers: {
+//         'Authorization': `Bearer ${SpotifyAccessToken.value}`
+//     }
+// })
+// .then(response => response.json());
+// console.log(userplaylists)
 ---
 <Layout title="dashboard">
     <div class="text-white">
         <h1>Welcome to spotynder!</h1>
+        <p>Your spotify user ID is {user_id}</p>
         <p>We are happy to see you here</p>
         <form action="/api/auth/signout">
           <button type="submit">Sign out</button>
