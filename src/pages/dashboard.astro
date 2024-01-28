@@ -1,0 +1,42 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { supabase } from "../lib/supabase";
+
+const { cookies, redirect } = Astro;
+
+const accessToken = cookies.get("sb-access-token");
+const refreshToken = cookies.get("sb-refresh-token");
+
+if (!accessToken || !refreshToken) {
+  return redirect("/");
+}
+
+const { data, error } = await supabase.auth.setSession({
+  refresh_token: refreshToken.value,
+  access_token: accessToken.value,
+});
+
+if (error) {
+  cookies.delete("sb-access-token", {
+    path: "/",
+  });
+  cookies.delete("sb-refresh-token", {
+    path: "/",
+  });
+
+  return redirect("/");
+}
+
+const user = await supabase.auth.getUser()
+console.log(user.data.user?.user_metadata)
+// const email = data?.user?.email;
+---
+<Layout title="dashboard">
+    <div class="text-white">
+        <h1>Welcome to spotynder!</h1>
+        <p>We are happy to see you here</p>
+        <form action="/api/auth/signout">
+          <button type="submit">Sign out</button>
+        </form>
+    </div>
+</Layout>

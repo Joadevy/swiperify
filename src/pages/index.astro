@@ -1,14 +1,21 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
+export const prerender = true;
 ---
 
 <Layout title="Spotynder">
 	<main>
 		<h1 class="text-gradient">Spotynder</h1>
-		<p class="instructions">
-			We&apos;re happy to have you here! To get started, login with your <code>spotify</code> account.
-		</p>
+		<div class="instructions flex flex-col gap-1">
+			<form action="/api/auth/signin" method="post" class="w-fit">
+				We&apos;re happy to have you here! To get started, enter with your
+					<button value="spotify" name="provider" type="submit" class="hover:opacity-75 transition-opacity">
+						<code>Spotify</code>
+					</button>
+					account.
+				</form>
+		</div>
 		<ul role="list" class="link-card-grid">
 			<Card
 				title="What is spotynder?"
