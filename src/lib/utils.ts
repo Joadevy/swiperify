@@ -1,1 +1,1 @@
-export const callbackUrl = "http://localhost:3000/api/auth/callback";
+export const callbackUrl = "http://localhost:4321/api/auth/callback";

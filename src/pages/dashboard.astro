@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { supabase } from "../lib/supabase";
+import type { PlaylistItem } from "../lib/types";
 
 const { cookies, redirect } = Astro;
 
@@ -27,37 +28,27 @@ if (error || !cookies.has('spotify-access-token')) {
   return redirect("/");
 }
 
-const user = await supabase.auth.getUser()
+// const user = await supabase.auth.getUser()
 
-const user_id = user.data.user?.user_metadata.sub; // esto representa el user_id de SPOTIFY (con esto se pueden traer  playlists, etc)
+// const user_id = user.data.user?.user_metadata.sub; // esto representa el user_id de SPOTIFY (con esto se pueden traer  playlists, etc)
 const spotify_access_token = cookies.get("spotify-access-token")?.value;
 
-// TODO: Configurar en el callback de auth para que guardemos el access token de spotify en una cookie
-// const userplaylists = await fetch(`https://api.spotify.com/v1/users/${user_id}/playlists`,{
-//     headers: {
-//         'Authorization': `Bearer ${spotify_access_token}`
-//     }
-// })
-// .then(response => response.json());
-// console.log(userplaylists)
-
-const userplaylists = await fetch(`https://api.spotify.com/v1/me/playlists`,{
+const {items: userplaylists} : { items: PlaylistItem[] } = await fetch(`https://api.spotify.com/v1/me/playlists`,{
    headers: {
         'Authorization': `Bearer ${spotify_access_token}`
     }
 })
 .then(response => response.json());
-console.log(userplaylists)
-console.log(user.data.user?.email) // no estoy logead con mi cuenta joa_arle_99 por eso no salen mis playlists
 ---
+
 <Layout title="dashboard">
     <div class="text-white">
-        <h1>Welcome to spotynder!</h1>
+        <h1>Welcome to spotynder !</h1>
         <p>We are happy to see you here</p>
         <div>
             <h2>Playlists</h2>
             <ul>
-                {userplaylists.items.map((playlist) => (
+                {userplaylists.map((playlist) => (
                     <li>{playlist.name}</li>
                 ))}
             </ul>
