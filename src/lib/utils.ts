@@ -1,0 +1,1 @@
+export const callbackUrl = "http://localhost:3000/api/auth/callback";

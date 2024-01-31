@@ -14,18 +14,17 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
     return new Response(error.message, { status: 500 });
   }
 
-  const { access_token, refresh_token } = data.session;
+  const { access_token, refresh_token, provider_token, provider_refresh_token } = data.session;
 
-  // Pareciera que aca deberia guardarse el token de spotify para poder hacer las llamadas a la api de spotify, podria
-  // guardarse el token en una cookie y luego leerlo desde el cliente para hacer las llamadas a la api de spotify
-  // Authorization code flow
-// Spotify supports OAuth 2.0 for authenticating all API requests.
+  // Store the Spotify access token in a cookie
+  cookies.set("spotify-access-token", provider_token!, {
+    path: "/",
+  });
 
-// Authorization url
-// https://accounts.spotify.com/authorize
-
-// Token url
-// https://accounts.spotify.com/api/token
+  // Store the Spotify refresh token in a cookie
+  cookies.set("spotify-refresh-token", provider_refresh_token!, {
+    path: "/",
+  });
 
   cookies.set("sb-access-token", access_token, {
     path: "/",
