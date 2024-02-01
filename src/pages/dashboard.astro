@@ -43,10 +43,12 @@ const {items: userplaylists} : { items: PlaylistItem[] } = await fetch(`https://
 
 <Layout title="dashboard">
     <div class="text-white">
-        <h1>Welcome to spotynder !</h1>
-        <p>We are happy to see you here</p>
+      <header class="flex flex-col items-center justify-center mb-4">
+        <h1 class="text-gradient">Welcome to spotynder</h1>
+        <p class="italic -mt-2 text-gray-400 ">Where the new sounds begin. Let&apos;s discover some music!</p>
+      </header>
         <div>
-            <h2>Playlists</h2>
+            <h2>Your playlists</h2>
             <ul>
                 {userplaylists.map((playlist) => (
                     <li>{playlist.name}</li>
@@ -58,3 +60,12 @@ const {items: userplaylists} : { items: PlaylistItem[] } = await fetch(`https://
         </form>
     </div>
 </Layout>
+
+<style>
+	h1 {
+		font-size: 4rem;
+		font-weight: 700;
+		line-height: 1;
+		text-align: center;
+	}
+</style>
