@@ -1,4 +1,5 @@
 ---
+import PlayListPick from "../components/PlayListPick.astro";
 import Layout from "../layouts/Layout.astro";
 import { supabase } from "../lib/supabase";
 import type { PlaylistItem } from "../lib/types";
@@ -48,10 +49,10 @@ const {items: userplaylists} : { items: PlaylistItem[] } = await fetch(`https://
         <p class="italic -mt-2 text-gray-400 ">Where the new sounds begin. Let&apos;s discover some music!</p>
       </header>
         <div>
-            <h2>Your playlists</h2>
-            <ul>
+            <h2 class="mb-2">Your playlists</h2>
+            <ul class="flex gap-2 flex-wrap ">
                 {userplaylists.map((playlist) => (
-                    <li>{playlist.name}</li>
+                  <PlayListPick playlist={playlist} />
                 ))}
             </ul>
         </div>
