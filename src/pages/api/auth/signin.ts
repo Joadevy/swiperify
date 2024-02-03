@@ -7,7 +7,7 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
     provider: 'spotify',
     options: {
         redirectTo: callbackUrl,
-        scopes: 'user-read-email user-read-private playlist-read-private playlist-read-collaborative',
+        scopes: 'user-read-email user-read-private playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private',
       },
   })
 

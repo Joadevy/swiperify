@@ -29,7 +29,7 @@ if (error || !cookies.has('spotify-access-token')) {
   return redirect("/");
 }
 
-// const user = await supabase.auth.getUser()
+const user = await supabase.auth.getUser()
 
 // const user_id = user.data.user?.user_metadata.sub; // esto representa el user_id de SPOTIFY (con esto se pueden traer  playlists, etc)
 const spotify_access_token = cookies.get("spotify-access-token")?.value;
@@ -40,6 +40,13 @@ const {items: userplaylists} : { items: PlaylistItem[] } = await fetch(`https://
     }
 })
 .then(response => response.json());
+
+userplaylists.forEach((playlist) => {
+  // console.log(playlist.name);
+  // console.log(playlist.id);
+  // console.log(playlist.owner)
+  console.log(user.data.user?.user_metadata.provider_id)
+});
 ---
 
 <Layout title="dashboard">
@@ -48,8 +55,13 @@ const {items: userplaylists} : { items: PlaylistItem[] } = await fetch(`https://
         <h1 class="text-gradient">Welcome to spotynder</h1>
         <p class="italic -mt-2 text-gray-400 ">Where the new sounds begin. Let&apos;s discover some music!</p>
       </header>
+
         <div>
-            <h2 class="mb-2">Your playlists</h2>
+          <header class="mb-2">
+            <h2 class="font-bold">Select your playlist you want to populate with some new music</h2>
+            <p class="text-gray-400 italic text-sm">Remember you only can add music to your own playlists</p>
+          </header>
+
             <ul class="flex gap-2 flex-wrap ">
                 {userplaylists.map((playlist) => (
                   <PlayListPick playlist={playlist} />
