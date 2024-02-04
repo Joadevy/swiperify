@@ -1,5 +1,6 @@
 ---
 import type { PlaylistItem } from '../lib/types';
+import { PickPlaylist } from './PlayListPick';
 
 interface Props {
 	playlist: PlaylistItem
@@ -13,6 +14,10 @@ const { playlist } = Astro.props;
 		<h2 class="bg-gray-700 bg-opacity-70 text-whitesmoke p-1 pr-2 rounded-br-md absolute top-0 left-0 ">
 			{playlist.name}
 		</h2>
+
+		<footer>
+			<PickPlaylist playlist={playlist} client:load />
+		</footer>
 	</div>
 </li>
 <style>

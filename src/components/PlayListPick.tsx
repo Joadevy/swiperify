@@ -1,0 +1,30 @@
+// import React from 'preact/compat';
+import { useEffect } from 'preact/hooks';
+import type { PlaylistItem } from '../lib/types';
+import { useStore } from '@nanostores/preact';
+import {$playListPicked} from '../store/playlist';
+
+interface Props {
+	playlist: PlaylistItem
+}
+
+export const PickPlaylist = ({ playlist }: Props) => {
+    const $store = useStore($playListPicked);
+
+    const handleSelect = () => {
+        $playListPicked.set(playlist.id);
+    }
+
+    useEffect(() => {
+        console.log('playlist picked', $store);
+    }
+    , [$store]);
+    
+  return (
+    <button onClick={handleSelect} class="p-2">
+        <p>
+            Select {playlist.name}
+        </p>
+    </button>
+  );
+};
