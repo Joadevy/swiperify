@@ -10,8 +10,7 @@ const accessToken = cookies.get("sb-access-token");
 const refreshToken = cookies.get("sb-refresh-token");
 
 if (!accessToken || !refreshToken) {
-  redirect("/");
-  return
+  return redirect("/");
 }
 
 const { data, error } = await supabase.auth.setSession({
@@ -27,8 +26,7 @@ if (error || !cookies.has('spotify-access-token')) {
     path: "/",
   });
 
-  redirect("/");
-  return
+  return redirect("/");
 }
 
 const user = await supabase.auth.getUser()
