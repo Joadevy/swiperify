@@ -1,0 +1,61 @@
+---
+const { cookies, url, redirect } = Astro;
+
+const accessToken = cookies.has("sb-access-token");
+const refreshToken = cookies.has("sb-refresh-token");
+const spotifyAccess = cookies.has('spotify-access-token')
+const userLoggedIn = accessToken && refreshToken && spotifyAccess;
+---
+<nav class="flex justify-between p-1 absolute top-0 w-full">
+	<a href="/" class="flex items-center hover:opacity-70 transition-opacity">
+		<!-- <h2>
+			Spotynder
+		</h2> -->
+        <img src="../../public/favicon.png" alt="">
+    </a>
+    {userLoggedIn ?(
+        <form action="/api/auth/signout">
+          <button type="submit" class="flex items-center hover:opacity-75 transition-opacity">
+            <p class="text-gray-400">
+                Sign out
+                </p>
+          </button>
+        </form>
+    ):(		
+        <form action="/api/auth/signin" method="post">
+            <button class="link-btn" type="submit">Sign In</button>
+        </form> 
+    )}
+</nav>
+<style>
+	.link-btn {
+        border: 1px solid rgba(var(--accent-light), 25%);
+		background: linear-gradient(45deg, rgba(var(--accent-dark), 75%), rgba(var(--tinder-red), 25%));
+		display: flex;
+		padding: 1px;
+
+        padding-left: 5px;
+        padding-right: 5px;
+		background-size: 400%;
+		border-radius: 7px;
+		background-position: 100%;
+		transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+	}
+	h2 {
+		margin: 0;
+		font-size: 1.25rem;
+		transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+	p {
+		margin-top: 0.5rem;
+		margin-bottom: 0;
+	}
+	.link-btn:is(:hover, :focus-within) {
+		background-position: 0;
+		background-image: var(--accent-gradient-variant);
+	}
+	.link-btn:is(:hover, :focus-within) h2 {
+		color: rgb(var(--accent-light));
+	}
+</style>
