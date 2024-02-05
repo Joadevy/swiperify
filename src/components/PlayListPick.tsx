@@ -14,7 +14,7 @@ export const PickPlaylist = ({ playlist }: Props) => {
 
     const handleSelect = () => {
         $playListPicked.set(playlist.id);
-        clientRedirect('newMusic');
+        clientRedirect('newMusic', {p: playlist.id});
     }
 
     // useEffect(() => {
