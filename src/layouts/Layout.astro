@@ -4,6 +4,9 @@ interface Props {
 }
 
 const { title } = Astro.props;
+export const redirect = (url: string) => {
+	Astro.redirect(url);
+}
 ---
 
 <!doctype html>

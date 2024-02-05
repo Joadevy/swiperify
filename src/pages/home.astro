@@ -10,7 +10,8 @@ const accessToken = cookies.get("sb-access-token");
 const refreshToken = cookies.get("sb-refresh-token");
 
 if (!accessToken || !refreshToken) {
-  return redirect("/");
+  redirect("/");
+  return
 }
 
 const { data, error } = await supabase.auth.setSession({
@@ -26,7 +27,8 @@ if (error || !cookies.has('spotify-access-token')) {
     path: "/",
   });
 
-  return redirect("/");
+  redirect("/");
+  return
 }
 
 const user = await supabase.auth.getUser()
@@ -48,7 +50,7 @@ const {items: userplaylists} : { items: PlaylistItem[] } = await fetch(`https://
 )
 ---
 
-<Layout title="Dashboard">
+<Layout title="home">
     <div class="text-white">
       <header class="flex flex-col items-center justify-center mb-4">
         <h1 class="text-gradient">Welcome to spotynder</h1>

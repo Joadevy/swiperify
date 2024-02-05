@@ -3,6 +3,7 @@ import { useEffect } from 'preact/hooks';
 import type { PlaylistItem } from '../lib/types';
 import { useStore } from '@nanostores/preact';
 import {$playListPicked} from '../store/playlist';
+import { clientRedirect } from '../lib/utils';
 
 interface Props {
 	playlist: PlaylistItem
@@ -13,12 +14,13 @@ export const PickPlaylist = ({ playlist }: Props) => {
 
     const handleSelect = () => {
         $playListPicked.set(playlist.id);
+        clientRedirect('newMusic');
     }
 
-    useEffect(() => {
+    // useEffect(() => {
         console.log('playlist picked', $store);
-    }
-    , [$store]);
+    // }
+    // , [$store]);
     
   return (
     <button onClick={handleSelect} class="p-2 bg-accent-light w-full bg-opacity-30">
