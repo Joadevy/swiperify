@@ -1,4 +1,5 @@
 ---
+import PlayListCreate from "../components/PlayListCreate.astro";
 import PlayListPick from "../components/PlayListPick.astro";
 import Layout from "../layouts/Layout.astro";
 import { supabase } from "../lib/supabase";
@@ -65,6 +66,7 @@ const {items: userplaylists} : { items: PlaylistItem[] } = await fetch(`https://
                 {userplaylists.map((playlist) => (
                   <PlayListPick playlist={playlist} />
                 ))}
+                <PlayListCreate />
             </ul>
         </div>
     </div>
