@@ -21,7 +21,7 @@ export const PickPlaylist = ({ playlist }: Props) => {
     , [$store]);
     
   return (
-    <button onClick={handleSelect} class="p-2">
+    <button onClick={handleSelect} class="p-2 bg-accent-light w-full bg-opacity-30">
         <p>
             Select {playlist.name}
         </p>
