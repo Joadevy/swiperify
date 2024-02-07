@@ -1,4 +1,5 @@
 ---
+import Player from "../components/Player";
 import Layout from "../layouts/Layout.astro";
 import { supabase } from "../lib/supabase";
 import type { PlaylistInformation } from "../lib/types";
@@ -38,7 +39,8 @@ const playlist: PlaylistInformation = await fetch(`https://api.spotify.com/v1/pl
         'Authorization': `Bearer ${spotify_access_token}`
     }
 })
-.then(response => response.json())
+.then(response => response.json());
+
 ---
 
 <Layout title="Discover">
@@ -48,7 +50,7 @@ const playlist: PlaylistInformation = await fetch(`https://api.spotify.com/v1/pl
         <p class="italic -mt-2 text-gray-400 ">Listen to some chunk-songs & add to your playlist if you liked them!</p>
       </header>
 
-        <div>
+        <main>
           <header class="mb-2">
             <h2 class="font-bold">Playlist selected: {playlist.name}</h2>
             <p class="text-gray-400 italic text-sm">Remember you can only add music to your own playlists</p>
@@ -59,7 +61,11 @@ const playlist: PlaylistInformation = await fetch(`https://api.spotify.com/v1/pl
                   <PlayListPick playlist={playlist} />
                 ))}
             </ul> -->
-        </div>
+
+            <div>
+              <Player client:load spotifyToken={spotify_access_token!}/>
+            </div>
+        </main>
     </div>
 </Layout>
 

@@ -1,7 +1,7 @@
 // import React from 'preact/compat';
-import { useEffect } from 'preact/hooks';
+import { useEffect } from 'react';
 import type { PlaylistItem } from '../lib/types';
-import { useStore } from '@nanostores/preact';
+import { useStore } from '@nanostores/react';
 import {$playListPicked} from '../store/playlist';
 import { clientRedirect } from '../lib/utils';
 
@@ -23,7 +23,7 @@ export const PickPlaylist = ({ playlist }: Props) => {
     // , [$store]);
     
   return (
-    <button onClick={handleSelect} class="p-2 bg-accent-light w-full bg-opacity-30">
+    <button onClick={handleSelect} className="p-2 bg-accent-light w-full bg-opacity-30">
         <p>
             Select {playlist.name}
         </p>

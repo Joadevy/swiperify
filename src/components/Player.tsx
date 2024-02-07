@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react"
+import { getCurrentDevice } from "../lib/spotify"
+import type { Device } from "../lib/types"
 
 export const Pause = ({ className }:{className?:string}) => (
   <svg className={className} role="img" height="16" width="16" aria-hidden="true" viewBox="0 0 16 16"><path d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"></path></svg>
@@ -22,6 +24,24 @@ export const Volume = () => (
 
 const Player = ({spotifyToken}:Props) => {
     const [isPlaying, setIsPlaying] = useState(false);
+    const [currentDevice, setCurrentDevice] = useState<Device | null>(null);
+
+
+  useEffect(() => {
+    const fetchCurrentDevice = async () => {
+      const device = await getCurrentDevice(spotifyToken);
+
+      if (device) {
+        setCurrentDevice(device);
+      } else {
+        // TODO: Habria que mostrar un toast o algo al usuario
+        console.error('No se ha podido obtener el dispositivo actual');
+      }
+    };
+
+    fetchCurrentDevice();
+  }, [spotifyToken]);
+
 
     useEffect(() => {
         //TODO: extraer esta function a un custom hook usePlaySong
@@ -29,7 +49,7 @@ const Player = ({spotifyToken}:Props) => {
         const response:{
           ok:boolean;
           status:number;
-        } = await fetch('https://api.spotify.com/v1/me/player/play',
+        } = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${currentDevice?.id}`,
         {
             method: 'PUT',
             headers: {
@@ -50,8 +70,22 @@ const Player = ({spotifyToken}:Props) => {
             console.error(response.status);
         }
 
+        const pauseSong = async () => {
+          if (currentDevice) 
+            await fetch(`https://api.spotify.com/v1/me/player/pause`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${spotifyToken}`
+                }
+            })
+        }
+
         if (isPlaying) {
             playNewSong();
+        } else {
+            pauseSong();
         }
     },[isPlaying])
         
