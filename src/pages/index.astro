@@ -7,13 +7,13 @@ export const prerender = true;
 <Layout title="Spotynder">
 	<main>
 		<h1 class="text-gradient">Spotynder</h1>
-		<div class="instructions flex flex-col gap-1">
+		<div class="instructions flex flex-col gap-1 -mt-5">
 			<form action="/api/auth/signin" method="post" class="w-fit">
 				We&apos;re happy to have you here! To get started, enter with your
 					<button value="spotify" name="provider" type="submit" class="hover:opacity-75 transition-opacity">
 						<code>Spotify</code>
 					</button>
-					account.
+					premium account.
 				</form>
 		</div>
 		<ul role="list" class="link-card-grid">
@@ -22,16 +22,16 @@ export const prerender = true;
 				body="An app that allows you to find your next favorite song to add to your playlist."
 			/>
 			<Card
-				title="Why spotynder?"
-				body="Because it&apos;s a mix of Spotify and Tinder. Swipe right to add to your playlist, swipe left to skip."
+				title="Do I need a premium account?"
+				body={`Unfortunately, yes. We need to be able to add songs to your playlist and spotify doesn't allow that without a premium account.`}
 			/>
 			<Card
 				title="Why do I need to login?"
 				body="We need to know who you are so we can add songs to your playlist. We don&apos;t store any of your data."
 			/>
 			<Card
-				title="Who made this?"
-				body={`Made with love by Joaquin Arlettaz ❤️`}
+				title="Why spotynder?"
+				body="Because it&apos;s a mix of Spotify and Tinder. Swipe right to add to your playlist, swipe left to skip."
 			/>
 		</ul>
 	</main>
