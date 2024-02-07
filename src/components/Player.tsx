@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { getCurrentDevice } from "../lib/spotify"
-import type { Device } from "../lib/types"
+import { useCurrentDevice } from "../hooks/useCurrentDevice"
+import { Toast } from "./Toast"
 
 export const Pause = ({ className }:{className?:string}) => (
   <svg className={className} role="img" height="16" width="16" aria-hidden="true" viewBox="0 0 16 16"><path d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"></path></svg>
@@ -24,24 +24,7 @@ export const Volume = () => (
 
 const Player = ({spotifyToken}:Props) => {
     const [isPlaying, setIsPlaying] = useState(false);
-    const [currentDevice, setCurrentDevice] = useState<Device | null>(null);
-
-
-  useEffect(() => {
-    const fetchCurrentDevice = async () => {
-      const device = await getCurrentDevice(spotifyToken);
-
-      if (device) {
-        setCurrentDevice(device);
-      } else {
-        // TODO: Habria que mostrar un toast o algo al usuario
-        console.error('No se ha podido obtener el dispositivo actual');
-      }
-    };
-
-    fetchCurrentDevice();
-  }, [spotifyToken]);
-
+    const {currentDevice, showNoDeviceToast} = useCurrentDevice(spotifyToken);
 
     useEffect(() => {
         //TODO: extraer esta function a un custom hook usePlaySong
@@ -95,6 +78,10 @@ const Player = ({spotifyToken}:Props) => {
         <button className="border p-2 rounded-full bg-white" onClick={() => setIsPlaying(!isPlaying)}>
             {isPlaying ? <Pause/> : <Play />}
         </button>
+
+        {/* {showNoDeviceToast && <div className="bg-red-500 text-white p-2 rounded">No se ha podido obtener el dispositivo actual</div>} */}
+        {showNoDeviceToast && <Toast type="error" message="We couldn't get the device. Please open spotify somewhere to continue."  />}
+    
     </div>
   )
 }
