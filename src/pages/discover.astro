@@ -2,7 +2,7 @@
 import Player from "../components/Player";
 import Layout from "../layouts/Layout.astro";
 import { supabase } from "../lib/supabase";
-import type { PlaylistInformation } from "../lib/types";
+import type { DevicesResponse, PlaylistInformation } from "../lib/types";
 
 const { cookies, url, redirect } = Astro;
 
@@ -41,6 +41,24 @@ const playlist: PlaylistInformation = await fetch(`https://api.spotify.com/v1/pl
 })
 .then(response => response.json());
 
+const getCurrentDevice = async (spotifyToken:string) => {
+  const {devices}:DevicesResponse = await fetch('https://api.spotify.com/v1/me/player/devices',
+  {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${spotifyToken}`
+    }
+  }).then(res => res.json());
+  const currentDevice = devices.find(device => device.is_active || device.supports_volume) ?? devices[0];
+  return currentDevice ? currentDevice : null;
+}
+
+const currentDevice = await getCurrentDevice(spotify_access_token!);
+
+cookies.set('spotify-device', currentDevice ?? "" , {
+  path: '/'
+});
 ---
 
 <Layout title="Discover">
@@ -63,7 +81,7 @@ const playlist: PlaylistInformation = await fetch(`https://api.spotify.com/v1/pl
             </ul> -->
 
             <div>
-              <Player client:load spotifyToken={spotify_access_token!}/>
+              <Player client:load spotifyToken={spotify_access_token!} currentDevice={currentDevice}/>
             </div>
         </main>
     </div>

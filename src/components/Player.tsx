@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useCurrentDevice } from "../hooks/useCurrentDevice"
 import { Toast } from "./Toast"
+import type { Device } from "../lib/types"
 
 export const Pause = ({ className }:{className?:string}) => (
   <svg className={className} role="img" height="16" width="16" aria-hidden="true" viewBox="0 0 16 16"><path d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"></path></svg>
@@ -19,12 +20,13 @@ export const Volume = () => (
   )
 
   type Props = {
-    spotifyToken: string;
+    spotifyToken: string,
+    currentDevice: Device | null;
   }
 
-const Player = ({spotifyToken}:Props) => {
+const Player = ({spotifyToken, currentDevice}:Props) => {
     const [isPlaying, setIsPlaying] = useState(false);
-    const {currentDevice, showNoDeviceToast} = useCurrentDevice(spotifyToken);
+    const showNoDeviceToast = !currentDevice;
 
     useEffect(() => {
         //TODO: extraer esta function a un custom hook usePlaySong
