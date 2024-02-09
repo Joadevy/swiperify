@@ -1,5 +1,5 @@
 // import React from 'preact/compat';
-import { useStore } from '@nanostores/preact';
+import { useStore } from '@nanostores/react';
 import {$playListPicked} from '../store/playlist';
 import { clientRedirect } from '../lib/utils';
 
@@ -20,7 +20,7 @@ export const CreateNewPlaylist = () => {
     // , [$store]);
     
   return (
-    <button onClick={handleCreate} class="p-2 bg-accent-light w-full bg-opacity-30">
+    <button onClick={handleCreate} className="p-2 bg-accent-light w-full bg-opacity-30">
         <p>
             Create new playlist
         </p>
