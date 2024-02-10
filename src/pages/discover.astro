@@ -1,8 +1,8 @@
 ---
-import Player from "../components/Player";
+import {WebPlayback} from "../components/WebPlayback";
 import Layout from "../layouts/Layout.astro";
 import { supabase } from "../lib/supabase";
-import type { DevicesResponse, PlaylistInformation } from "../lib/types";
+import type { PlaylistInformation } from "../lib/types";
 
 const { cookies, url, redirect } = Astro;
 
@@ -40,25 +40,6 @@ const playlist: PlaylistInformation = await fetch(`https://api.spotify.com/v1/pl
     }
 })
 .then(response => response.json());
-
-const getCurrentDevice = async (spotifyToken:string) => {
-  const {devices}:DevicesResponse = await fetch('https://api.spotify.com/v1/me/player/devices',
-  {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${spotifyToken}`
-    }
-  }).then(res => res.json());
-  const currentDevice = devices.find(device => device.is_active || device.supports_volume) ?? devices[0];
-  return currentDevice ? currentDevice : null;
-}
-
-const currentDevice = await getCurrentDevice(spotify_access_token!);
-
-cookies.set('spotify-device', currentDevice ?? "" , {
-  path: '/'
-});
 ---
 
 <Layout title="Discover">
@@ -73,15 +54,9 @@ cookies.set('spotify-device', currentDevice ?? "" , {
             <h2 class="font-bold">Playlist selected: {playlist.name}</h2>
             <p class="text-gray-400 italic text-sm">Remember you can only add music to your own playlists</p>
           </header>
-<!-- 
-            <ul class="flex gap-2 flex-wrap ">
-                {userplaylists.map((playlist) => (
-                  <PlayListPick playlist={playlist} />
-                ))}
-            </ul> -->
 
-            <div>
-              <Player client:load spotifyToken={spotify_access_token!} currentDevice={currentDevice}/>
+            <div class="mt-4">
+              <WebPlayback spotify_access_token={spotify_access_token ?? ""} client:load/>
             </div>
         </main>
     </div>
