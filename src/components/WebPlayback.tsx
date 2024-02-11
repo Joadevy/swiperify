@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Toast } from './Toast';
+import LoadingPlaybackCard from './LoadingPlaybackCard';
 declare global {
   interface Window {
     onSpotifyWebPlaybackSDKReady: () => void;
@@ -42,7 +43,7 @@ type Track = {
 
 type PlayerState = {
   track_window: {
-    current_track: Track; // Reemplaza 'any' con el tipo correcto para 'current_track'
+    current_track: Track;
   };
   paused: boolean;
 };
@@ -68,7 +69,6 @@ export function WebPlayback({spotify_access_token}: props) {
   //   },
   //   artists: [{name: "Artista de ejemplo"}]
   // });
-
   const [playerError, setPlayerError] = useState<string|null>(null);
 
   useEffect(() => {
@@ -165,10 +165,8 @@ export function WebPlayback({spotify_access_token}: props) {
                     </button>
                   </div>
               </div>
-              // TODO: agregar spinner component para la carga
-            ) : "loading..."}
+            ) : <LoadingPlaybackCard/>}
     
-
             {playerError && <Toast type="error" message={playerError}  />}
         </div>
    )
