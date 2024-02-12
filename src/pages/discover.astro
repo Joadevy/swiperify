@@ -40,6 +40,11 @@ const playlist: PlaylistInformation = await fetch(`https://api.spotify.com/v1/pl
     }
 })
 .then(response => response.json());
+
+
+if (!playlist) {
+  return redirect("/home");
+}
 ---
 
 <Layout title="Discover">
@@ -56,7 +61,7 @@ const playlist: PlaylistInformation = await fetch(`https://api.spotify.com/v1/pl
           </header>
 
             <div class="mt-4">
-              <WebPlayback spotify_access_token={spotify_access_token ?? ""} client:load/>
+              <WebPlayback spotify_access_token={spotify_access_token ?? ""} playlist_id={playlist_id!} client:load/>
             </div>
         </main>
     </div>
