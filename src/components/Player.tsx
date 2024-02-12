@@ -34,7 +34,7 @@ const Player = ({spotifyToken, currentDevice}:Props) => {
         const response:{
           ok:boolean;
           status:number;
-        } = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${currentDevice?.id}`,
+        } = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${currentDevice}`,
         {
             method: 'PUT',
             headers: {
