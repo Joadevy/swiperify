@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Toast } from './Toast';
 import LoadingPlaybackCard from './LoadingPlaybackCard';
+import { getRandomTrack } from '../lib/spotify';
 declare global {
   interface Window {
     onSpotifyWebPlaybackSDKReady: () => void;
@@ -132,13 +133,13 @@ export function WebPlayback({spotify_access_token}: props) {
 
   return (<div className='grid place-content-center'>
               {current_track ? (
-              <div className='flex flex-col gap-1 items-center justify-center w-fit rounded-md overflow-hidden bg-zinc-900 border border-zinc-800'>
+              <div className='w-[175px] flex flex-col gap-1 items-center justify-center rounded-md overflow-hidden bg-zinc-900 border border-zinc-800'>
                   <div className='flex flex-col relative' >
-                    <div className='w-[150px] h-[150px]'>
+                    <div className='w-[175px] h-[175px]'>
                        <img src={current_track.album.images[0].url} alt="" />
                     </div>
   
-                    <div className='flex flex-col text-xs p-1'>
+                    <div className='flex flex-col text-xs p-1 mt-1'>
                           <div className='font-bold border-b border-accent-light w-fit mb-1 text-accent-light'>
                             {current_track.name}
                           </div>
@@ -160,7 +161,9 @@ export function WebPlayback({spotify_access_token}: props) {
                         : <Pause/> }
                     </button>
   
-                    <button className="btn-spotify" onClick={() => { console.log('liked'); player?.nextTrack() }} >
+                    <button className="btn-spotify" onClick={() => { console.log('liked');
+                    getRandomTrack(spotify_access_token!);
+                    player?.nextTrack() }} >
                           <Like className='hover:scale-105 transition-transform'/>
                     </button>
                   </div>

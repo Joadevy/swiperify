@@ -2,12 +2,12 @@ import { Dislike, Like, Play } from "./WebPlayback";
 
 const LoadingPlaybackCard = () => {
   return (
-              <div className=' animate-pulse flex flex-col gap-1 items-center justify-center w-fit rounded-md overflow-hidden bg-zinc-900 border border-zinc-800'>
+              <div className='w-[175px] animate-pulse flex flex-col gap-1 items-center justify-center rounded-md overflow-hidden bg-zinc-900 border border-zinc-800'>
                   <div className='flex flex-col relative' >
-                    <div className='w-[150px] h-[150px] bg-zinc-800'>
+                    <div className='w-[175px] h-[175px] bg-zinc-800'>
                     </div>
   
-                    <div className='flex flex-col text-xs p-1'>
+                    <div className='flex flex-col text-xs p-1 mt-1'>
                           <div className='italic rounded-md h-4 w-24 bg-zinc-800 mb-1'>
                           </div>
   
