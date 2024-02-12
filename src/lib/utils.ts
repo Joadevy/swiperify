@@ -1,7 +1,3 @@
-export const callbackUrl = process.env.PROD
-  ? 'https://spotynder.vercel.app/api/auth/callback'
-  : 'http://localhost:4321/api/auth/callback';
-
 export const pages = {
     'newMusic':'/discover',
     'home' : '/home'
