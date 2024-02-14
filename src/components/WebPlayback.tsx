@@ -3,6 +3,7 @@ import { Toast } from './Toast';
 import LoadingPlaybackCard from './LoadingPlaybackCard';
 import { getRandomTrackUri, queueNewSong } from '../lib/spotify';
 import { usePlaylist } from '../hooks/usePlaylist';
+import { SelectGenre } from './SelectGenre';
 declare global {
   interface Window {
     onSpotifyWebPlaybackSDKReady: () => void;
@@ -63,10 +64,10 @@ type Player = {
 };
 
 const handleChangeSong = async (spotify_access_token:string, action:(() => void) | undefined, setPlayerError: (value: React.SetStateAction<string | null>) => void
-) => {
+, genre:string) => {
   let context_uri: string | undefined = undefined
   try {
-    context_uri = await getRandomTrackUri(spotify_access_token);
+    context_uri = await getRandomTrackUri(spotify_access_token, genre);
   } catch (error) {
     console.error(error);
     setPlayerError('We could not get a new song to play. Please try again or reload the page.');
@@ -93,6 +94,7 @@ export function WebPlayback({spotify_access_token, playlist_id}: props) {
   const [playerError, setPlayerError] = useState<string|null>(null);
   const [notify, setNotify] = useState<string|null>(null);
   const [handleAddToPlaylist] = usePlaylist(spotify_access_token!, playlist_id);
+  const [genre, setGenre] = useState<string>('all');
 
   useEffect(() => {
       const script = document.createElement("script");
@@ -164,7 +166,11 @@ export function WebPlayback({spotify_access_token, playlist_id}: props) {
 
   },[playerError, notify])
 
-  return (<div className='grid place-content-center'>
+  return (
+  <main>
+    {/* <hr className="border-t border-zinc-700 mb-4" /> */}
+    <SelectGenre setGenre={setGenre}/>
+    <div className='grid place-content-center'>
               {current_track && !loadingSong ? (
               <div className=' drop-shadow-2xl w-[175px] flex flex-col gap-1 items-center justify-center rounded-md overflow-hidden bg-zinc-900 border border-zinc-800'>
                   <div className='flex flex-col relative' >
@@ -186,7 +192,7 @@ export function WebPlayback({spotify_access_token, playlist_id}: props) {
                   <div className='flex gap-2 items-center justify-center p-3'>
                     <button onClick={async () => { 
                         setLoadingSong(true);
-                          await handleChangeSong(spotify_access_token,() => player?.nextTrack(), setPlayerError)
+                          await handleChangeSong(spotify_access_token,() => player?.nextTrack(), setPlayerError, genre)
                         setLoadingSong(false);
                       }} >
                           <Dislike className='hover:scale-105 transition-transform'/>
@@ -203,7 +209,7 @@ export function WebPlayback({spotify_access_token, playlist_id}: props) {
                         const addResponse = await handleAddToPlaylist([current_track.uri]);
                         if (!addResponse.ok) setPlayerError('We could not add the song to the playlist. Please try again or reload the page.');
                         else {
-                          await handleChangeSong(spotify_access_token, () => player?.nextTrack(), setPlayerError)
+                          await handleChangeSong(spotify_access_token, () => player?.nextTrack(), setPlayerError, genre)
                           setNotify(`${current_track.name} succesfully added to the playlist!`)
                         }
                       setLoadingSong(false);
@@ -217,6 +223,7 @@ export function WebPlayback({spotify_access_token, playlist_id}: props) {
             {playerError && <Toast type="error" message={playerError}  />}
             {notify && <Toast type="success" message={notify}  />}
         </div>
+  </main>
    )
 }
 
