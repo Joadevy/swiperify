@@ -1,7 +1,12 @@
 ---
 import { CreateNewPlaylist } from "./CreateNewPlaylist";
 
+interface Props {
+	UserId: string,
+	spotifytoken: string
+}
 
+const { UserId, spotifytoken } = Astro.props;
 ---
 
 <li class="link-card flex flex-col gap-1">
@@ -16,7 +21,7 @@ import { CreateNewPlaylist } from "./CreateNewPlaylist";
 	</div>
 
 	<footer class="w-full">
-		<CreateNewPlaylist  client:load/>
+		<CreateNewPlaylist UserId={UserId} spotifyToken={spotifytoken} client:load/>
 	</footer>
 </li>
 <style>

@@ -66,7 +66,7 @@ const {items: userplaylists} : { items: PlaylistItem[] } = await fetch(`https://
                 {userplaylists.map((playlist) => (
                   <PlayListPick playlist={playlist} />
                 ))}
-                <PlayListCreate />
+                <PlayListCreate spotifytoken={spotify_access_token!} UserId={user.data.user?.identities ? user.data.user.identities[0].id : user.data.user?.user_metadata.provider_id ?? ""  } />
             </ul>
         </div>
     </div>
