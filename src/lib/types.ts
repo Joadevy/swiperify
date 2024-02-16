@@ -291,3 +291,43 @@ export type SpotifyTrackResponse = {
     }[];
   }
 };
+
+export type SpotifyCreatePlaylistResponse = {
+  collaborative: boolean;
+  description: string | null;
+  external_urls: {
+    spotify: string;
+  };
+  followers: {
+    href: string | null;
+    total: number;
+  };
+  href: string;
+  id: string;
+  images: any[]; // Reemplaza 'any' con el tipo correcto si conoces la estructura de los objetos en este array
+  name: string;
+  owner: {
+    display_name: string;
+    external_urls: {
+      spotify: string;
+    };
+    href: string;
+    id: string;
+    type: string;
+    uri: string;
+  };
+  primary_color: string | null;
+  public: boolean;
+  snapshot_id: string;
+  tracks: {
+    href: string;
+    items: any[]; // Reemplaza 'any' con el tipo correcto si conoces la estructura de los objetos en este array
+    limit: number;
+    next: string | null;
+    offset: number;
+    previous: string | null;
+    total: number;
+  };
+  type: string;
+  uri: string;
+};
