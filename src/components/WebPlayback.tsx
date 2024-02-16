@@ -222,7 +222,7 @@ export function WebPlayback({spotify_access_token, playlist_id}: props) {
     
             {playerError && <Toast type="error" message={playerError}  />}
             {notify && <Toast type="success" message={notify}  />}
-        </div>
+    </div>
   </main>
    )
 }
