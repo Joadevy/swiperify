@@ -23,8 +23,8 @@ export const PickPlaylist = ({ playlist }: Props) => {
     // , [$store]);
     
   return (
-    <button onClick={handleSelect} className="p-2 bg-accent-light w-full bg-opacity-30">
-        <p>
+    <button onClick={handleSelect} className="p-2 bg-accent-light w-full bg-opacity-30 h-full">
+        <p className="leading-none" >
             Select {playlist.name}
         </p>
     </button>

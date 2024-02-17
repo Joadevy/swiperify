@@ -10,14 +10,14 @@ const { playlist } = Astro.props;
 ---
 
 <li class="link-card flex flex-col gap-1">
-	<div class="container-card bg-cover bg-center relative h-5/6" style={`background-image: url(${playlist.images[0]?.url})`}>
+	<div class="container-card bg-cover bg-center relative h-5/6 order-1" style={`background-image: url(${playlist.images[0]?.url})`}>
 		<h2 class="bg-gray-700 bg-opacity-70 text-whitesmoke p-1 pr-2 rounded-br-md absolute top-0 left-0 ">
 			{playlist.name}
 		</h2>
 
 	</div>
 
-	<footer class="w-full">
+	<footer class="w-full order-2 h-1/6">
 		<PickPlaylist playlist={playlist} client:load />
 	</footer>
 </li>
