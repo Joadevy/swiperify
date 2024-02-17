@@ -118,30 +118,43 @@ export const CreateNewPlaylist = ({UserId, spotifyToken}:Props) => {
     <>
       <button onClick={handleOpen} className='p-2 bg-accent-light w-full bg-opacity-30'>Create playlist</button>
       <div className={ isOpen ? 'fixed top-0 left-0 w-full h-full bg-black bg-opacity-50' : '' }>
-        <dialog className=" bg-zinc-800 p-4 text-slate-200 rounded-md w-80 sm:w-96" ref={dialogRef}>
-          <h2 className='text-center font-bold text-2xl'>Create new playlist</h2>
+        <dialog className=" bg-zinc-800 p-4 text-slate-200 rounded-md w-80 sm:w-[500px]" ref={dialogRef}>
+          <div className="bg-gradient-to-r from-accent-light to-green-700 bg-clip-text text-transparent leading-none font-extrabold text-4xl p-2">
+           <h2 className='text-center font-bold text-2xl lg:text-3xl '>Create new playlist</h2>
+
+          </div>
           <form className='flex flex-col gap-4 my-2' onSubmit={handleSubmit((data) => {
             handleCreatePlaylist(data);
           })}>
-              <label className='flex flex-col gap-1' htmlFor="Name">Playlist name
-                  <input onKeyDown={preventInputDefault} className={'text-zinc-800 rounded-sm px-2 placeholder:text-sm outline-none focus:outline-accent-light ' + (errors.Name ? 'focus:outline-tinder-red' : '')} {...register("Name",{required:"Name is required"})} id="Name" type="text" placeholder="Type playlist name..." />
+              <label className='flex flex-col gap-1' htmlFor="Name">
+                <p>
+                  Name 
+                  <span className={errors.Name ? 'ml-1 text-tinder-red' : 'ml-1 text-accent-light'}> 
+                    *
+                  </span>
+                </p>
+                <input onKeyDown={preventInputDefault} className={'text-zinc-800 rounded-sm px-2 py-1 placeholder:text-sm outline-none focus:outline-accent-light ' + (errors.Name ? 'focus:outline-tinder-red' : '')} {...register("Name",{required:"Name is required"})} id="Name" type="text" placeholder="Type playlist name..." />
               </label>
-              {errors.Name && <span className='text-red-500 text-sm'>{errors.Name.message}</span>}
+              {errors.Name && <span className='text-tinder-red text-sm'>{errors.Name.message}</span>}
 
-              <label className='flex flex-col gap-1' htmlFor="Description"> Playlist description
-                  <input onKeyDown={preventInputDefault} className='text-zinc-800 rounded-sm px-2 placeholder:text-sm outline-none focus:outline-accent-light' {...register("Description")} id="Description" type="text" placeholder="Type playlist description..." />
+              <label className='flex flex-col gap-1' htmlFor="Description"> Description
+                  <input onKeyDown={preventInputDefault} className='text-zinc-800 rounded-sm px-2 py-1 placeholder:text-sm outline-none focus:outline-accent-light' {...register("Description")} id="Description" type="text" placeholder="Type playlist description..." />
               </label>
 
-              <label htmlFor="isPublic">Public
-                  <input onKeyDown={preventInputDefault} {...register("isPublic")} className='ml-2' type="checkbox" id="isPublic" />
-              </label>
-              <label htmlFor="isCollaborative">Collaborative
-                  <input onKeyDown={preventInputDefault} className='ml-2' {...register("isCollaborative")} type="checkbox" id="isCollaborative" />
-              </label>
+              <div className='flex gap-6'>
+                <label htmlFor="isPublic" className='flex items-center gap-2'>Public
+                    <input onKeyDown={preventInputDefault} {...register("isPublic")} className='ml-2' type="checkbox" id="isPublic" />
+                </label>
+
+                <label className='flex items-center gap-2' htmlFor="isCollaborative">Collaborative
+                    <input onKeyDown={preventInputDefault} className='ml-2' {...register("isCollaborative")} type="checkbox" id="isCollaborative" />
+                </label>
+              </div>
+
 
             <footer className='flex justify-between mt-4'>
-                <input type="submit" value="Create & Use" className='p-2 bg-accent-light text-zinc-800 rounded-md hover:scale-105 hover:cursor-pointer transition-all hover:animate-bounce hover:opacity-85' />
-                <button type="button" onClick={handleClose}>Close</button>
+                <input type="submit" value="Create & Use" className='p-2 bg-accent-light text-zinc-800 rounded-sm hover:scale-105 hover:cursor-pointer transition-all hover:opacity-85' />
+                <button type="button" className=' bg-zinc-700 p-2 rounded-sm hover:opacity-75 transition-opacity' onClick={handleClose}>Close</button>
             </footer>
           </form>
 

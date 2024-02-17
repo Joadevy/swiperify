@@ -57,12 +57,12 @@ const {items: userplaylists} : { items: PlaylistItem[] } = await fetch(`https://
       </header>
 
         <div>
-          <header class="mb-4 lg:mb-2">
+          <header class="mb-4 lg:mb-3">
             <h2 class="font-bold">Select your playlist you want to populate with some new music</h2>
             <p class="text-gray-400 italic text-sm">Remember you can only add music to your own playlists</p>
           </header>
 
-            <ul class="flex gap-4 lg:gap-2 flex-wrap justify-center lg:justify-normal ">
+            <ul class="flex gap-4 lg:gap-2 lg:gap-y-4 flex-wrap justify-center lg:justify-normal ">
                 {userplaylists.map((playlist) => (
                   <PlayListPick playlist={playlist} />
                 ))}

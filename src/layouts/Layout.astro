@@ -79,4 +79,44 @@ const { title } = Astro.props;
 			Courier New,
 			monospace;
 	}
+	
+	input[type="checkbox"] {
+    /* Add if not using autoprefixer */
+    -webkit-appearance: none;
+    appearance: none;
+    /* For iOS < 15 to remove gradient background */
+    background-color: #18181b; 
+		/* #09090b; */
+    /* Not removed via appearance */
+    margin: 0;
+    font: inherit;
+    color: #18181b; 
+    width: 25px;
+    height: 25px;
+    border: 0.1em solid #3f3f46;
+    border-radius: 2.5px;
+    transform: translateY(-0.075em);
+    display: grid;
+    place-content: center;
+  }
+
+  input[type="checkbox"]::before {
+    content: "";
+    width: 0.75em;
+    height: 0.75em;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em rgb(134, 239, 172);
+    transform-origin: bottom left;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  }
+
+  input[type="checkbox"]:checked::before {
+    transform: scale(1);
+  }
+
+  input[type="checkbox"]:focus {
+    outline: max(.5px, 0.12em) solid rgb(134, 239, 172);
+    outline-offset: max(1px, 0.12em);
+  }
 </style>
