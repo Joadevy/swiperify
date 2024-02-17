@@ -2,9 +2,9 @@ import { Dislike, Like, Play } from "./WebPlayback";
 
 const LoadingPlaybackCard = () => {
   return (
-              <div className='w-[175px] animate-pulse flex flex-col gap-1 items-center justify-center rounded-md overflow-hidden bg-zinc-900 border border-zinc-800'>
+              <div className='w-[200px] animate-pulse flex flex-col gap-1 items-center justify-center rounded-md overflow-hidden bg-zinc-900 border border-zinc-800'>
                   <div className='flex flex-col relative' >
-                    <div className='w-[175px] h-[175px] bg-zinc-800'>
+                    <div className='w-[200px] h-[200px] bg-zinc-800'>
                     </div>
   
                     <div className='flex flex-col text-xs p-1 mt-1'>
@@ -16,7 +16,7 @@ const LoadingPlaybackCard = () => {
                     </div>
                   </div>
                   
-                  <div className='opacity-10 flex gap-2 items-center justify-center p-3'>
+                  <div className='opacity-10 flex gap-6 lg:gap-3 items-center justify-center p-3 '>
                     <button>
                           <Dislike className='hover:scale-105 transition-transform'/>
                     </button>

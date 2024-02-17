@@ -52,14 +52,14 @@ if (!playlist) {
     <div class="text-white">
       <header class="flex flex-col items-center justify-center mb-4">
         <h1 class="text-gradient">Discover new music</h1>
-        <p class="italic -mt-2 text-gray-400 ">Listen to some chunk-songs & add to your playlist if you liked them!</p>
+        <p class="italic -mt-5 lg:-mt-2 text-gray-400 ">Listen to some chunk-songs & add to your playlist if you liked them!</p>
       </header>
 
         <main>
           <header class="mb-2">
             <div class="flex gap-1 items-center">
-              <h2 class="font-bold flex items-center gap-1">Playlist selected <span class=" text-accent-light flex gap-1 items-center ">{playlist.name} <a aria-label="Change playlist" href="/home" class=" text-accent-light hover:text-amber-500 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 18h4.24a1 1 0 0 0 .71-.29l6.92-6.93L19.71 8a1 1 0 0 0 0-1.42l-4.24-4.29a1 1 0 0 0-1.42 0l-2.82 2.83l-6.94 6.93a1 1 0 0 0-.29.71V17a1 1 0 0 0 1 1m9.76-13.59l2.83 2.83l-1.42 1.42l-2.83-2.83ZM6 13.17l5.93-5.93l2.83 2.83L8.83 16H6ZM21 20H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2"/></svg>
+              <h2 class="font-bold flex items-center lg:gap-1 flex-wrap">Playlist selected:  <span class=" text-accent-light flex gap-1 items-center ml-1 ">{playlist.name} <a aria-label="Change playlist" href="/home" class=" text-accent-light hover:text-amber-500 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 18h4.24a1 1 0 0 0 .71-.29l6.92-6.93L19.71 8a1 1 0 0 0 0-1.42l-4.24-4.29a1 1 0 0 0-1.42 0l-2.82 2.83l-6.94 6.93a1 1 0 0 0-.29.71V17a1 1 0 0 0 1 1m9.76-13.59l2.83 2.83l-1.42 1.42l-2.83-2.83ZM6 13.17l5.93-5.93l2.83 2.83L8.83 16H6ZM21 20H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2"/></svg>
               </a></span></h2>
             </div>
             <p class="text-gray-400 italic text-sm">Remember you can only add music to your own playlists</p>
@@ -79,4 +79,9 @@ if (!playlist) {
 		line-height: 1;
 		text-align: center;
 	}
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 3.5rem;
+    }
+  }
 </style>
