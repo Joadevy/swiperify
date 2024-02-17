@@ -174,15 +174,20 @@ export function WebPlayback({spotify_access_token, playlist_id}: props) {
     </div>
     <div className='grid place-content-center lg:-mt-20'>
               {current_track && !loadingSong ? (
-              <div className=' drop-shadow-2xl w-[200px] flex flex-col gap-1 items-center justify-center rounded-md overflow-hidden bg-zinc-900 border border-zinc-800'>
-                  <div className='flex flex-col relative' >
+              <div className='drop-shadow-2xl relative w-[200px] h-[325px]  flex flex-col gap-1 items-center justify-center rounded-md overflow-hidden bg-zinc-900 border border-zinc-800'>
+                  <div className='flex flex-col absolute top-0' >
                     <div className='w-[200px] h-[200px]'>
-                       <img src={current_track.album.images[0].url} alt="" />
+                       <img  className='w-full h-full' src={current_track.album.images[0].url} alt="" />
                     </div>
   
                     <div className='flex flex-col text-xs p-1 mt-1'>
-                          <div className='font-bold border-b border-accent-light w-fit mb-1 text-accent-light'>
-                            {current_track.name}
+                          <div className='font-bold border-b border-accent-light w-fit mb-1 text-accent-light'
+                            title={current_track.name} // Añade esto
+                          >
+                            {current_track.name.length >= 52 ? 
+                              current_track.name.slice(0,52) + '...'
+                              : current_track.name  
+                          }
                           </div>
   
                           <div className='italic'>
@@ -191,7 +196,7 @@ export function WebPlayback({spotify_access_token, playlist_id}: props) {
                     </div>
                   </div>
                   
-                  <div className='flex gap-6 lg:gap-3 items-center justify-center p-3'>
+                  <div className='flex gap-6 lg:gap-3 items-center justify-center p-3 absolute bottom-0'>
                     <button onClick={async () => { 
                         setLoadingSong(true);
                           await handleChangeSong(spotify_access_token,() => player?.nextTrack(), setPlayerError, genre)
