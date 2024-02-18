@@ -12,7 +12,10 @@ export default {
 				'tinder-orange': 'rgb(249, 115, 22)',
 				'tinder-amber': 'rgb(217, 119, 6)',
 				'accent-gradient': 'linear-gradient(45deg, rgb(34, 197, 94)), rgb(153, 27, 27) 25%, white 90%)',
-			}
+			}, 
+			 backgroundImage: {
+        'opacity-gradient': 'linear-gradient(to top, #00000088 20%, transparent 50%)',
+      }
       },
 	},
 	plugins: [],
