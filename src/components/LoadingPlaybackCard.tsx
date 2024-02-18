@@ -2,16 +2,16 @@ import { Dislike, Like, Play } from "./WebPlayback";
 
 const LoadingPlaybackCard = () => {
   return (
-              <div className='w-[200px] h-[325px] relative animate-pulse flex flex-col gap-1 items-center justify-center rounded-md overflow-hidden bg-zinc-900 border border-zinc-800'>
+              <div className='w-[250px] h-[375px] relative animate-pulse flex flex-col gap-1 items-center justify-center rounded-md overflow-hidden bg-zinc-900 border border-zinc-800'>
                   <div className='flex flex-col absolute top-0' >
-                    <div className='w-[200px] h-[200px] bg-zinc-800'>
+                    <div className='w-[250px] h-[250px] bg-zinc-800'>
                     </div>
   
                     <div className='flex flex-col text-xs p-1 mt-1'>
-                          <div className='italic rounded-md h-4 w-24 bg-zinc-800 mb-1'>
+                          <div className='italic rounded-md h-6 w-36 bg-zinc-800 mb-2'>
                           </div>
   
-                          <div className='italic rounded-md h-2 w-16 bg-zinc-800'>
+                          <div className='italic rounded-md h-4 w-24 bg-zinc-800'>
                           </div>
                     </div>
                   </div>
@@ -26,7 +26,7 @@ const LoadingPlaybackCard = () => {
                     </button>
   
                     <button>
-                          <Like/>
+                        <Like/>
                     </button>
                   </div>
               </div>
