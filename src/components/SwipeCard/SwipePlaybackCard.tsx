@@ -9,10 +9,10 @@ type Props = {
   actionRight: () => void,
   actionLeft: () => void
 }
+const DECISION_THRESHOLD = 150;
 
 const SwipePlaybackCard = ({url, name, artist, actionLeft, actionRight}:Props) => {
   // const [isAnimating, setIsAnimating] = useState(false);
-  const DECISION_THRESHOLD = 120;
   // let pullX = 0;
 
   useEffect(() => {
@@ -27,7 +27,6 @@ const SwipePlaybackCard = ({url, name, artist, actionLeft, actionRight}:Props) =
       let pullDeltaX: number;
       if ('touches' in e) startX = e.touches[0].pageX;
       else startX = e.pageX;
-      console.log('rerender brou')
       
       
       const moveCard = (e:MouseEvent | TouchEvent) => {
@@ -48,19 +47,19 @@ const SwipePlaybackCard = ({url, name, artist, actionLeft, actionRight}:Props) =
         card.style.transform = `translate(${pullDeltaX}px, 0) rotate(${deg}deg)`;
         card.style.cursor = 'grabbing';
 
-        console.log(pullDeltaX)
+
+        const opacity = Math.abs(pullDeltaX) / 100;
+        const isRight = pullDeltaX > 0;
+
+        const choiceElement = isRight ? document.getElementById('goRight') : document.getElementById('goLeft');
+        if (choiceElement) choiceElement.style.opacity = `${opacity}`;
       }
       
       const releaseCard = () => {
-        // TODO: chequear si pullDeltaX es > a cierto valor significa que se debe eliminar la card y pasar a la siguiente, sino vuelve.
-        // card.style.transform = `translate(${pullDeltaX < 0 ? '-1000px' : '1000px'}, 0)`;
-
         const decisionMade = Math.abs(pullDeltaX) > DECISION_THRESHOLD;
 
         if (decisionMade) {
-          console.log('decision hecha xD')
           const goRight = pullDeltaX >= 0;
-          const goLeft = !goRight;
           if (goRight) {
             actionRight();
             card.classList.add( styles['go-right']);
@@ -68,18 +67,18 @@ const SwipePlaybackCard = ({url, name, artist, actionLeft, actionRight}:Props) =
             actionLeft();
             card.classList.add(styles['go-left']);
           }
-          // card.style.transform = `translate(${pullDeltaX < 0 ? '-1000px' : '1000px'}, 0)`;
         } else {
-          console.log('nope')
           card.classList.add(styles['reset'])
           card.classList.remove(styles['go-right'], styles['go-left']);
+          const isRight = pullDeltaX >= 0;
+          const choiceElement = isRight ? document.getElementById('goRight') : document.getElementById('goLeft');
+          if (choiceElement) choiceElement.style.opacity = `0`;
         }
 
         card.addEventListener('transitionend', () => {
           card.classList.remove(styles['reset'], styles['go-right'], styles['go-left']);
           card.style.transform = '';
           card.style.cursor = 'grab';
-          // setIsAnimating(false);
         }, {once: true});
 
         window.removeEventListener('mousemove', moveCard);
@@ -108,6 +107,13 @@ const SwipePlaybackCard = ({url, name, artist, actionLeft, actionRight}:Props) =
           src={url} 
           alt="" />
         </div>
+
+          <div id="goRight" className="opacity-0 absolute z-100 border-2 top-8 left-4 rotate-[-30deg] w-fit text-2xl font-extrabold rounded-lg px-1 py-2 text-accent-light border-accent-light">
+              LIKE
+          </div>
+          <div id="goLeft" className=" opacity-0 absolute z-100 border-2 top-8 right-4 rotate-[30deg] w-fit text-2xl font-extrabold rounded-lg px-1 py-2 text-tinder-red  border-tinder-red">
+              NEXT
+          </div>
     
         <div className='flex flex-col text-base p-3 mt-1 absolute bottom-0 rounded-tr-md  bg-opacity-gradient justify-end w-full h-full'>
           <div className='font-bold border-b border-accent-light w-fit mb-1 text-accent-light' title={name}>
