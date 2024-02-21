@@ -1,0 +1,15 @@
+.go-left{
+    transform: translateX(-200%) rotate(-30deg) !important;
+    transition: transform .3 ease, rotate 0.5s easel
+}
+
+.go-right{
+    transform: translateX(200%) rotate(30deg) !important;
+    transition: transform .3 ease, rotate 0.5s easel
+}
+
+.reset{
+    transform: translateX(0) !important;
+    transition: transform 0.5s ease;
+}
+

@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Toast } from './Toast';
-import LoadingPlaybackCard from './LoadingPlaybackCard';
-import { getRandomTrackUri, queueNewSong } from '../lib/spotify';
-import { usePlaylist } from '../hooks/usePlaylist';
-import { SelectGenre } from './SelectGenre';
+import { Toast } from '../Toast';
+import LoadingPlaybackCard from '../LoadingPlaybackCard';
+import { getRandomTrackUri, queueNewSong } from '../../lib/spotify';
+import { usePlaylist } from '../../hooks/usePlaylist';
+import { SelectGenre } from '../SelectGenre';
+import SwipePlaybackCard from './SwipePlaybackCard';
+import { SwipePlaybackLoading } from './SwipePlaybackLoading';
 declare global {
   interface Window {
     onSpotifyWebPlaybackSDKReady: () => void;
@@ -88,91 +90,91 @@ const handleChangeSong = async (spotify_access_token:string, action:(() => void)
 export function SwipePlayback({spotify_access_token, playlist_id}: props) {
   const [player, setPlayer] = useState<Player|null>(null);
   const [is_paused, setPaused] = useState(false);
-  // const [current_track, setTrack] = useState<Track | null>(null);
-  const [current_track,setTrack] = useState<Track | null>({
-    name: 'Soy yo',
-    id: '1',
-    uri: '1',
-    album: {
-      images: [{url: '../../testImageAlbum.jpg'}]
-    },
-    artists: [{name: 'Kany Garcia'}]
-  });
+  const [current_track, setTrack] = useState<Track | null>(null);
+  // const [current_track,setTrack] = useState<Track | null>({
+  //   name: 'Soy yo',
+  //   id: '1',
+  //   uri: '1',
+  //   album: {
+  //     images: [{url: '../../testImageAlbum.jpg'}]
+  //   },
+  //   artists: [{name: 'Kany Garcia'}]
+  // });
   const [loadingSong, setLoadingSong] = useState(false);
   const [playerError, setPlayerError] = useState<string|null>(null);
   const [notify, setNotify] = useState<string|null>(null);
   const [handleAddToPlaylist] = usePlaylist(spotify_access_token!, playlist_id);
   const [genre, setGenre] = useState<string>('all');
 
-  // useEffect(() => {
-  //     const script = document.createElement("script");
-  //     script.src = "https://sdk.scdn.co/spotify-player.js";
-  //     script.async = true;
+  useEffect(() => {
+      const script = document.createElement("script");
+      script.src = "https://sdk.scdn.co/spotify-player.js";
+      script.async = true;
 
-  //     document.body.appendChild(script);
+      document.body.appendChild(script);
 
-  //     window.onSpotifyWebPlaybackSDKReady = () => {
-  //         const player = new window.Spotify.Player({
-  //             name: 'Web Playback SDK',
-  //             getOAuthToken: (cb:(token: string) => void) => { cb(spotify_access_token); },
-  //             volume: 0.5
-  //         });
+      window.onSpotifyWebPlaybackSDKReady = () => {
+          const player = new window.Spotify.Player({
+              name: 'Web Playback SDK',
+              getOAuthToken: (cb:(token: string) => void) => { cb(spotify_access_token); },
+              volume: 0.5
+          });
 
-  //         setPlayer(player);
+          setPlayer(player);
 
-  //         player.addListener('ready', ({ device_id }:{device_id:string}) => {
-  //             const transferPlayback = async (spotifyToken:string, deviceId: string) => {
-  //             await fetch('https://api.spotify.com/v1/me/player',
-  //             {
-  //               method: 'PUT',
-  //               headers: {
-  //                 'Content-Type': 'application/json',
-  //                 'Authorization': `Bearer ${spotifyToken}`
-  //               },
-  //               body: JSON.stringify({
-  //                 device_ids:[deviceId],
-  //                 // TODO: decidir si establecer o no el autoplay
-  //                 // play:true 
-  //               })
-  //             })
-  //           }
+          player.addListener('ready', ({ device_id }:{device_id:string}) => {
+              const transferPlayback = async (spotifyToken:string, deviceId: string) => {
+              await fetch('https://api.spotify.com/v1/me/player',
+              {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${spotifyToken}`
+                },
+                body: JSON.stringify({
+                  device_ids:[deviceId],
+                  // TODO: decidir si establecer o no el autoplay
+                  // play:true 
+                })
+              })
+            }
 
-  //           transferPlayback(spotify_access_token!, device_id);
-  //         });
+            transferPlayback(spotify_access_token!, device_id);
+          });
 
-  //         player.addListener('not_ready', ({ device_id }:{device_id:string}) => {
-  //             console.log('Device ID has gone offline', device_id);
-  //             setPlayerError('Device has gone offline');
-  //         });
+          player.addListener('not_ready', ({ device_id }:{device_id:string}) => {
+              console.log('Device ID has gone offline', device_id);
+              setPlayerError('Device has gone offline');
+          });
 
-  //         player.addListener('player_state_changed', ((state:PlayerState) => {
-  //             if (!state) {
-  //                 return;
-  //             }
+          player.addListener('player_state_changed', ((state:PlayerState) => {
+              if (!state) {
+                  return;
+              }
 
-  //             setTrack(state.track_window.current_track);
-  //             setPaused(state.paused);
-  //         }));
+              setTrack(state.track_window.current_track);
+              setPaused(state.paused);
+          }));
 
-  //         player.connect();
-  //     };
-  // }, []);
+          player.connect();
+      };
+  }, []);
 
 
-  // useEffect(() => {
-  //   if (playerError){
-  //     setTimeout(() => {
-  //       setPlayerError(null)
-  //     }, 7500)
-  //   } 
+  useEffect(() => {
+    if (playerError){
+      setTimeout(() => {
+        setPlayerError(null)
+      }, 7500)
+    } 
 
-  //   if (notify){
-  //     setTimeout(() => {
-  //       setNotify(null)
-  //     }, 7500)
-  //   }
+    if (notify){
+      setTimeout(() => {
+        setNotify(null)
+      }, 7500)
+    }
 
-  // },[playerError, notify])
+  },[playerError, notify])
 
   return (
   <main className='flex flex-col items-center gap-5 lg:gap-0'>
@@ -183,30 +185,26 @@ export function SwipePlayback({spotify_access_token, playlist_id}: props) {
     <div className='grid place-content-center lg:-mt-20 relative'>
               {current_track && !loadingSong ? (
               <div className='drop-shadow-2xl relative p-3 w-[325px] h-[415px] flex flex-col gap-1 items-center justify-center rounded-sm overflow-hidden bg-zinc-900 border border-zinc-800'>
-                
-                  {/* El article va a ser lo que va a poder swipear como tinder, los controles debajo se mantienen */}
-                    <article className='flex flex-col absolute top-3 border border-accent-light rounded-md overflow-hidden cursor-grab shadow-xl' >
-                      <div className='w-full h-[325px] relative'>
-                        <img  className='w-full h-full' 
-                        src={current_track.album.images[0].url} 
-                        alt="" />
-                      </div>
-    
-                      <div className='flex flex-col text-base p-3 mt-1 absolute bottom-0 rounded-tr-md  bg-opacity-gradient justify-end w-full h-full'>
-                            <div className='font-bold border-b border-accent-light w-fit mb-1 text-accent-light'
-                              title={current_track.name}
-                            >
-                              {current_track.name.length >= 52 ? 
-                                  current_track.name.slice(0,52) + '...'
-                                  : current_track.name  
-                              }
-                            </div>
-    
-                            <div className='italic'>
-                              {current_track.artists[0].name}
-                            </div>
-                      </div>
-                    </article>
+                    <SwipePlaybackCard  actionRight={
+                      async() => { 
+                      setLoadingSong(true);
+                        const addResponse = await handleAddToPlaylist([current_track.uri]);
+                        if (!addResponse.ok) setPlayerError('We could not add the song to the playlist. Please try again or reload the page.');
+                        else {
+                          await handleChangeSong(spotify_access_token, () => player?.nextTrack(), setPlayerError, genre)
+                          setNotify(`${current_track.name} succesfully added to the playlist!`)
+                        }
+                      setLoadingSong(false);
+                    } 
+                    }
+                    actionLeft={async () => { 
+                        setLoadingSong(true);
+                          await handleChangeSong(spotify_access_token,() => player?.nextTrack(), setPlayerError, genre)
+                        setLoadingSong(false);
+                      }} 
+                      artist={current_track.artists[0].name} 
+                      name={current_track.name} 
+                      url={current_track.album.images[0].url}/>
                   
                   <div className='flex gap-6 lg:gap-3 items-center justify-center p-4 absolute bottom-0'>
                     <button onClick={async () => { 
@@ -237,7 +235,7 @@ export function SwipePlayback({spotify_access_token, playlist_id}: props) {
                     </button>
                   </div>
               </div>
-            ) : <LoadingPlaybackCard/>}
+            ) : <SwipePlaybackLoading/>}
     
             {playerError && <Toast type="error" message={playerError}  />}
             {notify && <Toast type="success" message={notify}  />}
