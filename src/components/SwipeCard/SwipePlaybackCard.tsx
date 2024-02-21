@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect} from "react"
 import styles from './SwipeCard.module.css';
 
 
@@ -9,19 +9,14 @@ type Props = {
   actionRight: () => void,
   actionLeft: () => void
 }
-const DECISION_THRESHOLD = 150;
+const DECISION_THRESHOLD = 175;
 
 const SwipePlaybackCard = ({url, name, artist, actionLeft, actionRight}:Props) => {
-  // const [isAnimating, setIsAnimating] = useState(false);
-  // let pullX = 0;
 
   useEffect(() => {
-    // if (isAnimating) return
-
     const card = document.getElementById('card-grab') as HTMLElement;
 
     const startDrag = (e:MouseEvent | TouchEvent ) => {
-      // setIsAnimating(true);
       e.preventDefault();
       let startX: number;
       let pullDeltaX: number;
@@ -41,7 +36,6 @@ const SwipePlaybackCard = ({url, name, artist, actionLeft, actionRight}:Props) =
 
         if (pullDeltaX == 0) return;
 
-        // setIsAnimating(true);
         const deg = pullDeltaX / 15;
 
         card.style.transform = `translate(${pullDeltaX}px, 0) rotate(${deg}deg)`;
@@ -81,14 +75,16 @@ const SwipePlaybackCard = ({url, name, artist, actionLeft, actionRight}:Props) =
           card.style.cursor = 'grab';
         }, {once: true});
 
-        window.removeEventListener('mousemove', moveCard);
-        window.removeEventListener('mouseup', releaseCard);
-        window.removeEventListener('touchmove', moveCard);
-        window.removeEventListener('touchend', releaseCard);
+        document.removeEventListener('mousemove', moveCard);
+        document.removeEventListener('mouseup', releaseCard);
+        document.removeEventListener('touchmove', moveCard);
+        document.removeEventListener('touchend', releaseCard);
       }
 
-      window.addEventListener('mousemove', moveCard);
-      window.addEventListener('mouseup', releaseCard);
+      document.addEventListener('mousemove', moveCard);
+      document.addEventListener('mouseup', releaseCard);
+      document.addEventListener('touchmove', moveCard, { passive: true })
+      document.addEventListener('touchend', releaseCard, { passive: true })
     }
 
     card.addEventListener('mousedown', startDrag);
