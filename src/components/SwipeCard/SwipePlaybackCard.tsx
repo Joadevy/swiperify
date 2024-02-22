@@ -57,9 +57,11 @@ const SwipePlaybackCard = ({url, name, artist, actionLeft, actionRight}:Props) =
           if (goRight) {
             actionRight();
             card.classList.add( styles['go-right']);
+            card.remove();
           } else {
             actionLeft();
             card.classList.add(styles['go-left']);
+            card.remove();
           }
         } else {
           card.classList.add(styles['reset'])
