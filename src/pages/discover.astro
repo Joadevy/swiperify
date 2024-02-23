@@ -1,8 +1,9 @@
 ---
+import { SelectPlaylist } from "../components/SelectChangePlaylist";
 import {SwipePlayback} from "../components/SwipeCard/SwipePlayback";
 import Layout from "../layouts/Layout.astro";
 import { supabase } from "../lib/supabase";
-import type { PlaylistInformation } from "../lib/types";
+import type { PlaylistInformation, PlaylistItem } from "../lib/types";
 
 const { cookies, url, redirect } = Astro;
 
@@ -29,22 +30,33 @@ if (error || !cookies.has('spotify-access-token')) {
   return redirect("/");
 }
 
+const user = await supabase.auth.getUser()
+
 // const user = await supabase.auth.getUser()
 const spotify_access_token = cookies.get("spotify-access-token")?.value;
 const playlist_id = url.searchParams.get("p");
 
+const fetchOptions = {
+  headers: {
+    'Authorization': `Bearer ${spotify_access_token}`
+  }
+};
+
 // Obtendriamos info de la playlist del usuario donde luego agregaremos las canciones que venga como parametro
-const playlist: PlaylistInformation = await fetch(`https://api.spotify.com/v1/playlists/${playlist_id}`,{
-   headers: {
-        'Authorization': `Bearer ${spotify_access_token}`
-    }
-})
-.then(response => response.json());
+const playlistPromise:Promise<PlaylistInformation> = fetch(`https://api.spotify.com/v1/playlists/${playlist_id}`, fetchOptions)
+  .then(response => response.json());
 
+// Obtendriamos las playlist del usuario para que pueda luego cambiar de playlist a la que quiera``
+const userPlaylistsPromise:Promise<{items:PlaylistItem[]}> = fetch(`https://api.spotify.com/v1/me/playlists`, fetchOptions)
+  .then(response => response.json())
+  .then(data => {
+    const filteredItems = data.items.filter((playlist: PlaylistItem) => 
+      playlist.owner.id === user.data.user?.user_metadata.provider_id
+    );
+    return { items: filteredItems };
+  });
 
-if (!playlist) {
-  return redirect("/home");
-}
+const [playlist, { items: userplaylists }] = await Promise.all([playlistPromise, userPlaylistsPromise]);
 ---
 
 <Layout title="Discover">
@@ -53,6 +65,8 @@ if (!playlist) {
         <h1 class="text-gradient">Discover new music</h1>
         <p class="italic -mt-5 lg:-mt-2 text-gray-400 ">Listen to some chunk-songs & add to your playlist if you liked them!</p>
       </header>
+
+      <SelectPlaylist playlists={userplaylists} client:load/>
 
         <main>
           <header class="mb-2">
