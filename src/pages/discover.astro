@@ -1,10 +1,8 @@
 ---
-import {WebPlayback} from "../components/WebPlayback";
 import {SwipePlayback} from "../components/SwipeCard/SwipePlayback";
 import Layout from "../layouts/Layout.astro";
 import { supabase } from "../lib/supabase";
 import type { PlaylistInformation } from "../lib/types";
-import {SelectGenre} from "../components/SelectGenre";
 
 const { cookies, url, redirect } = Astro;
 
@@ -67,7 +65,6 @@ if (!playlist) {
           </header>
 
             <div class="mt-4">
-              <!-- <WebPlayback spotify_access_token={spotify_access_token ?? ""} playlist_id={playlist_id!} client:load/> -->
               <SwipePlayback spotify_access_token={spotify_access_token ?? ""} playlist_id={playlist_id!} client:load />
             </div>
         </main>
