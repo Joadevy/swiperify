@@ -96,7 +96,7 @@ const SwipePlaybackCard = ({url, name, artist, actionLeft, actionRight}:Props) =
       card.removeEventListener('mousedown', startDrag);
       card.removeEventListener('touchstart', startDrag);
     }
-  }, []);
+  }, [url]);
 
   return (
      <article id="card-grab" className='flex flex-col absolute top-3 border border-accent-light rounded-md overflow-hidden cursor-grab shadow-xl ' >

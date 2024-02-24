@@ -42,10 +42,6 @@ const fetchOptions = {
   }
 };
 
-// Obtendriamos info de la playlist del usuario donde luego agregaremos las canciones que venga como parametro
-const playlistPromise:Promise<PlaylistInformation> = fetch(`https://api.spotify.com/v1/playlists/${playlist_id}`, fetchOptions)
-  .then(response => response.json());
-
 // Obtendriamos las playlist del usuario para que pueda luego cambiar de playlist a la que quiera``
 const userPlaylistsPromise:Promise<{items:PlaylistItem[]}> = fetch(`https://api.spotify.com/v1/me/playlists`, fetchOptions)
   .then(response => response.json())
@@ -56,31 +52,23 @@ const userPlaylistsPromise:Promise<{items:PlaylistItem[]}> = fetch(`https://api.
     return { items: filteredItems };
   });
 
-const [playlist, { items: userplaylists }] = await Promise.all([playlistPromise, userPlaylistsPromise]);
+const { items: userplaylists } = await userPlaylistsPromise;
 ---
 
 <Layout title="Discover">
     <div class="text-white">
-      <header class="flex flex-col items-center justify-center mb-4">
+      <header class="flex flex-col items-center text-center justify-center mb-4">
         <h1 class="text-gradient">Discover new music</h1>
-        <p class="italic -mt-5 lg:-mt-2 text-gray-400 ">Listen to some chunk-songs & add to your playlist if you liked them!</p>
+        <p class="italic -mt-4 lg:-mt-2 text-gray-400 ">Listen to some chunk-songs & add to your playlist if you liked them!</p>
       </header>
 
-      <SelectPlaylist playlists={userplaylists} client:load/>
-
-        <main>
-          <header class="mb-2">
-            <div class="flex gap-1 items-center">
-              <h2 class="font-bold flex items-center lg:gap-1 flex-wrap">Playlist selected:  <span class=" text-accent-light flex gap-1 items-center ml-1 ">{playlist.name} <a aria-label="Change playlist" href="/home" class=" text-accent-light hover:text-amber-500 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 18h4.24a1 1 0 0 0 .71-.29l6.92-6.93L19.71 8a1 1 0 0 0 0-1.42l-4.24-4.29a1 1 0 0 0-1.42 0l-2.82 2.83l-6.94 6.93a1 1 0 0 0-.29.71V17a1 1 0 0 0 1 1m9.76-13.59l2.83 2.83l-1.42 1.42l-2.83-2.83ZM6 13.17l5.93-5.93l2.83 2.83L8.83 16H6ZM21 20H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2"/></svg>
-              </a></span></h2>
-            </div>
-            <p class="text-gray-400 italic text-sm">Remember you can only add music to your own playlists</p>
-          </header>
-
-            <div class="mt-4">
-              <SwipePlayback spotify_access_token={spotify_access_token ?? ""} playlist_id={playlist_id!} client:load />
-            </div>
+      
+      <main> 
+        <div class="mt-4">
+          <SwipePlayback spotify_access_token={spotify_access_token ?? ""} playlist_id={playlist_id!} client:load>
+            <SelectPlaylist playlists={userplaylists} playlistIdFromURLParam={playlist_id ?? ""} client:load/>
+          </SwipePlayback>
+        </div>
         </main>
     </div>
 </Layout>

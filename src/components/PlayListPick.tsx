@@ -1,8 +1,7 @@
 // import React from 'preact/compat';
-import { useEffect } from 'react';
 import type { PlaylistItem } from '../lib/types';
 import { useStore } from '@nanostores/react';
-import {$playListPicked} from '../store/playlist';
+import {$playlistPicked, changePlaylistStored} from '../store/playlist';
 import { clientRedirect } from '../lib/utils';
 
 interface Props {
@@ -10,10 +9,10 @@ interface Props {
 }
 
 export const PickPlaylist = ({ playlist }: Props) => {
-    const $store = useStore($playListPicked);
+    const $store = useStore($playlistPicked);
 
     const handleSelect = () => {
-        $playListPicked.set(playlist.id);
+        changePlaylistStored(playlist.id);
         clientRedirect('newMusic', {p: playlist.id});
     }
 

@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Toast } from '../Toast';
-import LoadingPlaybackCard from '../LoadingPlaybackCard';
 import { getRandomTrackUri, queueNewSong } from '../../lib/spotify';
 import { usePlaylist } from '../../hooks/usePlaylist';
 import { SelectGenre } from '../SelectGenre';
 import SwipePlaybackCard from './SwipePlaybackCard';
 import { SwipePlaybackLoading } from './SwipePlaybackLoading';
+import { $playlistPicked } from '../../store/playlist';
+import { useStore } from '@nanostores/react';
 declare global {
   interface Window {
     onSpotifyWebPlaybackSDKReady: () => void;
@@ -28,11 +29,6 @@ export const Like = ({ className } : {className?:string} ) => (
 export const Dislike = ({ className } : {className?:string} ) => (
   <svg className={className} xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24"><path fill='currentColor' d="M20 3H6.693A2.01 2.01 0 0 0 4.82 4.298l-2.757 7.351A1 1 0 0 0 2 12v2c0 1.103.897 2 2 2h5.612L8.49 19.367a2.004 2.004 0 0 0 .274 1.802c.376.52.982.831 1.624.831H12c.297 0 .578-.132.769-.36l4.7-5.64H20c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2m-8.469 17h-1.145l1.562-4.684A1 1 0 0 0 11 14H4v-1.819L6.693 5H16v9.638zM18 14V5h2l.001 9z"/></svg>
 )
-
-type props= {
-  spotify_access_token: string
-  playlist_id: string
-}
 
 type Track = {
   name: string;
@@ -86,26 +82,23 @@ const handleChangeSong = async (spotify_access_token:string, action:(() => void)
   }
 }
 
+type props= {
+  spotify_access_token: string
+  playlist_id: string
+  children?: React.ReactNode
+}
 
-export function SwipePlayback({spotify_access_token, playlist_id}: props) {
+export function SwipePlayback({spotify_access_token, children}: props) {
   const [player, setPlayer] = useState<Player|null>(null);
   const [is_paused, setPaused] = useState(false);
   const [current_track, setTrack] = useState<Track | null>(null);
-  // const [current_track,setTrack] = useState<Track | null>({
-  //   name: 'Soy yo',
-  //   id: '1',
-  //   uri: '1',
-  //   album: {
-  //     images: [{url: '../../testImageAlbum.jpg'}]
-  //   },
-  //   artists: [{name: 'Kany Garcia'}]
-  // });
+  const playlistPick = useStore($playlistPicked);
   const [loadingSong, setLoadingSong] = useState(false);
   const [playerError, setPlayerError] = useState<string|null>(null);
   const [notify, setNotify] = useState<string|null>(null);
-  const [handleAddToPlaylist] = usePlaylist(spotify_access_token!, playlist_id);
+  const [handleAddToPlaylist] = usePlaylist(spotify_access_token!, playlistPick);
   const [genre, setGenre] = useState<string>('all');
-
+  
   useEffect(() => {
       const script = document.createElement("script");
       script.src = "https://sdk.scdn.co/spotify-player.js";
@@ -176,26 +169,36 @@ export function SwipePlayback({spotify_access_token, playlist_id}: props) {
 
   },[playerError, notify])
 
+  console.log(current_track?.name)
+
+  const addSongToPlaylist = async() => { 
+    if (!current_track) return;
+    setLoadingSong(true);
+    console.log('se le paso: ',current_track.name)
+    const addResponse = await handleAddToPlaylist([current_track.uri]);
+    if (!addResponse.ok) setPlayerError('We could not add the song to the playlist. Please try again or reload the page.');
+    else {
+      await handleChangeSong(spotify_access_token, () => player?.nextTrack(), setPlayerError, genre)
+      setNotify(`${current_track.name} succesfully added to the playlist!`)
+    }
+    setLoadingSong(false);
+  }
+
   return (
-  <main className='flex flex-col items-center gap-5 lg:gap-0'>
+  <main className='flex flex-col items-center gap-2 lg:gap-0'>
     {/* <hr className="border-t border-zinc-700 mb-4" /> */}
-    <div className="lg:self-start">
-      <SelectGenre setGenre={setGenre}/>
+    
+    <div className='flex-wrap lg:self-start w-full gap-2 flex justify-between'>
+        {children}
+
+        <SelectGenre setGenre={setGenre}/>
     </div>
-    <div className='grid place-content-center lg:-mt-20 relative'>
+
+    <div className='grid place-content-center lg:-mt-28 relative'>
               {current_track && !loadingSong ? (
               <div className='drop-shadow-2xl relative p-3 w-[325px] h-[415px] flex flex-col gap-1 items-center justify-center rounded-sm overflow-hidden bg-zinc-900 border border-zinc-800'>
                     <SwipePlaybackCard  actionRight={
-                      async() => { 
-                      setLoadingSong(true);
-                        const addResponse = await handleAddToPlaylist([current_track.uri]);
-                        if (!addResponse.ok) setPlayerError('We could not add the song to the playlist. Please try again or reload the page.');
-                        else {
-                          await handleChangeSong(spotify_access_token, () => player?.nextTrack(), setPlayerError, genre)
-                          setNotify(`${current_track.name} succesfully added to the playlist!`)
-                        }
-                      setLoadingSong(false);
-                    } 
+                      addSongToPlaylist
                     }
                     actionLeft={async () => { 
                         setLoadingSong(true);
@@ -221,16 +224,7 @@ export function SwipePlayback({spotify_access_token, playlist_id}: props) {
                         : <Pause/> }
                     </button>
   
-                    <button onClick={async() => { 
-                      setLoadingSong(true);
-                        const addResponse = await handleAddToPlaylist([current_track.uri]);
-                        if (!addResponse.ok) setPlayerError('We could not add the song to the playlist. Please try again or reload the page.');
-                        else {
-                          await handleChangeSong(spotify_access_token, () => player?.nextTrack(), setPlayerError, genre)
-                          setNotify(`${current_track.name} succesfully added to the playlist!`)
-                        }
-                      setLoadingSong(false);
-                     }} >
+                    <button onClick={addSongToPlaylist} >
                           <Like className='hover:scale-105 transition-transform'/>
                     </button>
                   </div>

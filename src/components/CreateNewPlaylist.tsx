@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Toast } from './Toast';
 import type { SpotifyCreatePlaylistResponse } from '../lib/types';
-import { useStore } from '@nanostores/react';
-import { $playListPicked } from '../store/playlist';
+import { changePlaylistStored } from '../store/playlist';
 import { clientRedirect } from '../lib/utils';
 
 interface Props {
@@ -29,7 +28,6 @@ export const CreateNewPlaylist = ({UserId, spotifyToken}:Props) => {
   const dialogRef = useRef<HTMLDialogElement|null>(null);
   const [playlistError, setPlaylistError] = useState<string | null>(null);
   const [playlistCreated, setPlaylistCreated] = useState<string | null>(null);
-  const $store = useStore($playListPicked);
 
   const {register, handleSubmit, formState:{errors}} = useForm({
     defaultValues:{
@@ -89,7 +87,7 @@ export const CreateNewPlaylist = ({UserId, spotifyToken}:Props) => {
 
     if(response.ok && response.status === 201){
       response.json().then((playlist) => {
-        $playListPicked.set(playlist.id);
+        changePlaylistStored(playlist.id);
         clientRedirect('newMusic', {p: playlist.id});
       })
       setPlaylistCreated('Playlist created successfully');
