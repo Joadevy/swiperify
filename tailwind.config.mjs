@@ -4,7 +4,6 @@ export default {
 	theme: {
 		extend: {
 			colors:{
-
 				'accent': 'rgb(34, 197, 94)',
 				'accent-light': 'rgb(134, 239, 172)',
 				'accent-dark': 'rgb(20, 83, 45)',
