@@ -106,10 +106,10 @@ const SwipePlaybackCard = ({url, name, artist, actionLeft, actionRight}:Props) =
           alt="" />
         </div>
 
-          <div id="goRight" className="opacity-0 absolute z-100 border-2 top-8 left-4 rotate-[-30deg] w-fit text-2xl font-extrabold rounded-lg px-1 py-2 text-accent-light border-accent-light">
+          <div id="goRight" className="opacity-0 bg-zinc-600 shadow-[0px_0px_35px_10px_#86efad] bg-opacity-50 absolute z-100 border-2 top-8 left-4 rotate-[-30deg] w-fit text-2xl font-extrabold rounded-lg px-1 py-2 text-accent-light border-accent-light">
               LIKE
           </div>
-          <div id="goLeft" className=" opacity-0 absolute z-100 border-2 top-8 right-4 rotate-[30deg] w-fit text-2xl font-extrabold rounded-lg px-1 py-2 text-tinder-red  border-tinder-red">
+          <div id="goLeft" className=" opacity-0 bg-zinc-600 shadow-[0px_0px_35px_10px_#991b1b] bg-opacity-50 absolute z-100 border-2 top-8 right-4 rotate-[30deg] w-fit text-2xl font-extrabold rounded-lg px-1 py-2 text-tinder-red  border-tinder-red">
               NEXT
           </div>
     
