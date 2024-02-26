@@ -184,6 +184,13 @@ export function SwipePlayback({spotify_access_token, children}: props) {
     setLoadingSong(false);
   }
 
+  const nextSongToQueue = useCallback(async () => {
+    if (!player) return;
+    setLoadingSong(true);
+      await handleChangeSong(spotify_access_token,() => player.nextTrack(), setPlayerError, genre)
+    setLoadingSong(false);
+  }, [player, spotify_access_token, genre]);
+
   return (
   <main className='flex flex-col items-center gap-2 lg:gap-0'>
     {/* <hr className="border-t border-zinc-700 mb-4" /> */}
@@ -197,24 +204,15 @@ export function SwipePlayback({spotify_access_token, children}: props) {
     <div className='grid place-content-center lg:-mt-28 relative'>
               {current_track && !loadingSong ? (
               <div className='drop-shadow-2xl relative p-3 w-[325px] h-[415px] flex flex-col gap-1 items-center justify-center rounded-sm overflow-hidden bg-zinc-900 border border-zinc-800'>
-                    <SwipePlaybackCard  actionRight={
-                      addSongToPlaylist
-                    }
-                    actionLeft={async () => { 
-                        setLoadingSong(true);
-                          await handleChangeSong(spotify_access_token,() => player?.nextTrack(), setPlayerError, genre)
-                        setLoadingSong(false);
-                      }} 
+                  <SwipePlaybackCard  
+                    actionRight={addSongToPlaylist}
+                    actionLeft={nextSongToQueue} 
                       artist={current_track.artists[0].name} 
                       name={current_track.name} 
                       url={current_track.album.images[0].url}/>
                   
                   <div className='flex gap-6 lg:gap-3 items-center justify-center p-4 absolute bottom-0'>
-                    <button onClick={async () => { 
-                        setLoadingSong(true);
-                          await handleChangeSong(spotify_access_token,() => player?.nextTrack(), setPlayerError, genre)
-                        setLoadingSong(false);
-                      }} >
+                    <button onClick={nextSongToQueue} >
                           <Dislike className='hover:scale-105 transition-transform'/>
                     </button>
   
