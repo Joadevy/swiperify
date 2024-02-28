@@ -7,6 +7,7 @@ import SwipePlaybackCard from './SwipePlaybackCard';
 import { SwipePlaybackLoading } from './SwipePlaybackLoading';
 import { $playlistPicked } from '../../store/playlist';
 import { useStore } from '@nanostores/react';
+import VolumeController from '../VolumeController';
 declare global {
   interface Window {
     onSpotifyWebPlaybackSDKReady: () => void;
@@ -58,6 +59,7 @@ type Player = {
   togglePlay: () => void;
   nextTrack: () => void;
   previousTrack: () => void;
+  setVolume: (value:number) => void;
 };
 
 const handleChangeSong = async (spotify_access_token:string, action:(() => void) | undefined, setPlayerError: (value: React.SetStateAction<string | null>) => void
@@ -98,7 +100,7 @@ export function SwipePlayback({spotify_access_token, children}: props) {
   const [notify, setNotify] = useState<string|null>(null);
   const [handleAddToPlaylist] = usePlaylist(spotify_access_token!, playlistPick);
   const [genre, setGenre] = useState<string>('all');
-  
+    
   useEffect(() => {
       const script = document.createElement("script");
       script.src = "https://sdk.scdn.co/spotify-player.js";
@@ -169,8 +171,6 @@ export function SwipePlayback({spotify_access_token, children}: props) {
 
   },[playerError, notify])
 
-  console.log(current_track?.name)
-
   const addSongToPlaylist = async() => { 
     if (!current_track) return;
     setLoadingSong(true);
@@ -184,37 +184,34 @@ export function SwipePlayback({spotify_access_token, children}: props) {
     setLoadingSong(false);
   }
 
+  const nextSongToQueue = useCallback(async () => {
+    if (!player) return;
+    setLoadingSong(true);
+      await handleChangeSong(spotify_access_token,() => player.nextTrack(), setPlayerError, genre)
+    setLoadingSong(false);
+  }, [player, spotify_access_token, genre]);
+
   return (
-  <main className='flex flex-col items-center gap-2 lg:gap-0'>
-    {/* <hr className="border-t border-zinc-700 mb-4" /> */}
-    
+  <main className='flex flex-col items-center gap-2 lg:gap-0'>    
     <div className='flex-wrap lg:self-start w-full gap-2 flex justify-between'>
         {children}
 
         <SelectGenre setGenre={setGenre}/>
     </div>
 
+
     <div className='grid place-content-center lg:-mt-28 relative'>
               {current_track && !loadingSong ? (
-              <div className='drop-shadow-2xl relative p-3 w-[325px] h-[415px] flex flex-col gap-1 items-center justify-center rounded-sm overflow-hidden bg-zinc-900 border border-zinc-800'>
-                    <SwipePlaybackCard  actionRight={
-                      addSongToPlaylist
-                    }
-                    actionLeft={async () => { 
-                        setLoadingSong(true);
-                          await handleChangeSong(spotify_access_token,() => player?.nextTrack(), setPlayerError, genre)
-                        setLoadingSong(false);
-                      }} 
+              <div className='drop-shadow-2xl relative p-3 w-[325px] lg:w-[400px] lg:h-[450px] h-[415px] flex flex-col gap-1 items-center justify-center rounded-sm overflow-hidden bg-zinc-900 border border-zinc-800'>
+                  <SwipePlaybackCard  
+                    actionRight={addSongToPlaylist}
+                    actionLeft={nextSongToQueue} 
                       artist={current_track.artists[0].name} 
                       name={current_track.name} 
                       url={current_track.album.images[0].url}/>
                   
-                  <div className='flex gap-6 lg:gap-3 items-center justify-center p-4 absolute bottom-0'>
-                    <button onClick={async () => { 
-                        setLoadingSong(true);
-                          await handleChangeSong(spotify_access_token,() => player?.nextTrack(), setPlayerError, genre)
-                        setLoadingSong(false);
-                      }} >
+                  <div className='lg:hidden flex gap-6 lg:gap-3 items-center justify-center p-4 absolute bottom-0'>
+                    <button onClick={nextSongToQueue} >
                           <Dislike className='hover:scale-105 transition-transform'/>
                     </button>
   
@@ -234,6 +231,34 @@ export function SwipePlayback({spotify_access_token, children}: props) {
             {playerError && <Toast type="error" message={playerError}  />}
             {notify && <Toast type="success" message={notify}  />}
     </div>
+
+    <div className='hidden lg:flex gap-6 lg:gap-3  items-center justify-center p-4 fixed bg-zinc-800 h-[65px] bottom-0 w-full'>
+        {/* <div>
+          asd
+        </div> */}
+
+        <div className="flex gap-3 items-center justify-center">
+          <button 
+          onClick={nextSongToQueue}
+          >
+                <Dislike className='hover:scale-105 transition-transform'/>
+          </button>
+    
+          <button className="border p-2 rounded-full hover:border-accent-light transition-colors" onClick={() => { player?.togglePlay() }} >
+              { is_paused ? 
+                <Play/>
+              : <Pause/> }
+          </button>
+    
+          <button 
+          onClick={addSongToPlaylist}
+          >
+                <Like className='hover:scale-105 transition-transform'/>
+          </button>
+        </div>
+
+        <VolumeController action={(value) => player?.setVolume(value)} />
+      </div>
   </main>
    )
 }
