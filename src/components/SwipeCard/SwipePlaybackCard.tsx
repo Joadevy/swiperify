@@ -100,7 +100,7 @@ const SwipePlaybackCard = ({url, name, artist, actionLeft, actionRight}:Props) =
 
   return (
      <article id="card-grab" className='flex flex-col absolute top-3 border border-accent-light rounded-md overflow-hidden cursor-grab shadow-xl ' >
-        <div className='w-full h-[325px] relative'>
+        <div className='w-full h-[325px] lg:h-[425px] relative border'>
           <img  className='w-full h-full aspect-square' 
           src={url} 
           alt="" />
