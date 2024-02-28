@@ -100,8 +100,7 @@ export function SwipePlayback({spotify_access_token, children}: props) {
   const [notify, setNotify] = useState<string|null>(null);
   const [handleAddToPlaylist] = usePlaylist(spotify_access_token!, playlistPick);
   const [genre, setGenre] = useState<string>('all');
-  const [volume, setVolume] = useState(10);
-  
+    
   useEffect(() => {
       const script = document.createElement("script");
       script.src = "https://sdk.scdn.co/spotify-player.js";
@@ -172,8 +171,6 @@ export function SwipePlayback({spotify_access_token, children}: props) {
 
   },[playerError, notify])
 
-  console.log(current_track?.name)
-
   const addSongToPlaylist = async() => { 
     if (!current_track) return;
     setLoadingSong(true);
@@ -193,8 +190,6 @@ export function SwipePlayback({spotify_access_token, children}: props) {
       await handleChangeSong(spotify_access_token,() => player.nextTrack(), setPlayerError, genre)
     setLoadingSong(false);
   }, [player, spotify_access_token, genre]);
-
-  console.log(current_track, player)
 
   return (
   <main className='flex flex-col items-center gap-2 lg:gap-0'>    
