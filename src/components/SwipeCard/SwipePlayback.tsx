@@ -94,12 +94,14 @@ export function SwipePlayback({spotify_access_token, children}: props) {
   const [player, setPlayer] = useState<Player|null>(null);
   const [is_paused, setPaused] = useState(false);
   const [current_track, setTrack] = useState<Track | null>(null);
+
   const playlistPick = useStore($playlistPicked);
   const [loadingSong, setLoadingSong] = useState(false);
   const [playerError, setPlayerError] = useState<string|null>(null);
   const [notify, setNotify] = useState<string|null>(null);
   const [handleAddToPlaylist] = usePlaylist(spotify_access_token!, playlistPick);
   const [genre, setGenre] = useState<string>('all');
+  const artistsChain = current_track?.artists.map(artist => artist.name).join(', ');
     
   useEffect(() => {
       const script = document.createElement("script");
@@ -208,7 +210,7 @@ export function SwipePlayback({spotify_access_token, children}: props) {
                     actionLeft={nextSongToQueue} 
                       artist={current_track.artists[0].name} 
                       name={current_track.name} 
-                      url={current_track.album.images[0].url}/>
+                      url={current_track.album.images[2]?.url ??  current_track.album.images[1]?.url ?? current_track.album.images[0].url }/>
                   
                   <div className='lg:hidden flex gap-6 lg:gap-3 items-center justify-center p-4 absolute bottom-0'>
                     <button onClick={nextSongToQueue} >
@@ -232,10 +234,22 @@ export function SwipePlayback({spotify_access_token, children}: props) {
             {notify && <Toast type="success" message={notify}  />}
     </div>
 
-    <div className='hidden lg:flex gap-6 lg:gap-3  items-center justify-center p-4 fixed bg-zinc-800 h-[65px] bottom-0 w-full'>
-        {/* <div>
-          asd
-        </div> */}
+    <footer className='hidden border-t border-zinc-600 lg:flex gap-6 lg:gap-3  items-center justify-center p-4 fixed bg-zinc-800 h-[65px] bottom-0 w-full'>
+        <div className='flex gap-2 items-center justify-center absolute left-3 '>
+          <div className='w-12 h-12 rounded-md shadow-xl overflow-hidden'>
+                <img className='w-full' src={current_track?.album.images[0].url} alt="" />
+          </div>
+
+        <div className='text-base'>
+          <h4>
+            {current_track?.name && current_track.name.length > 50 ? current_track?.name.slice(0, 50) + '...' : current_track?.name}
+          </h4>
+          <p className='text-zinc-300 text-sm' title={artistsChain}>
+            {artistsChain && artistsChain.length > 60 ? artistsChain.slice(0, 50) + '...' : artistsChain}
+          </p>
+        </div>
+
+        </div>
 
         <div className="flex gap-3 items-center justify-center">
           <button 
@@ -258,7 +272,7 @@ export function SwipePlayback({spotify_access_token, children}: props) {
         </div>
 
         <VolumeController action={(value) => player?.setVolume(value)} />
-      </div>
+      </footer>
   </main>
    )
 }
