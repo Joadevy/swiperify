@@ -8,6 +8,8 @@ import { SwipePlaybackLoading } from './SwipePlaybackLoading';
 import { $playlistPicked } from '../../store/playlist';
 import { useStore } from '@nanostores/react';
 import VolumeController from '../VolumeController';
+import PlayerTrackInfoLoading from '../PlayerTrackInfoLoader';
+import PlayerTrackInfo from '../PlayerTrackInfo';
 declare global {
   interface Window {
     onSpotifyWebPlaybackSDKReady: () => void;
@@ -240,16 +242,21 @@ export function SwipePlayback({spotify_access_token, children}: props) {
                 <img className='w-full' src={current_track?.album.images[0].url} alt="" />
           </div>
 
-        <div className='text-base'>
-          <h4>
-            {current_track?.name && current_track.name.length > 50 ? current_track?.name.slice(0, 50) + '...' : current_track?.name}
-          </h4>
-          <p className='text-zinc-300 text-sm' title={artistsChain}>
-            {artistsChain && artistsChain.length > 60 ? artistsChain.slice(0, 50) + '...' : artistsChain}
-          </p>
+          <div className='text-base'>
+            <h4>
+              {current_track?.name && current_track.name.length > 50 ? current_track?.name.slice(0, 50) + '...' : current_track?.name}
+            </h4>
+            <p className='text-zinc-300 text-sm' title={artistsChain}>
+              {artistsChain && artistsChain.length > 60 ? artistsChain.slice(0, 50) + '...' : artistsChain}
+            </p>
+          </div>
         </div>
 
-        </div>
+        {current_track && !loadingSong ? <PlayerTrackInfo
+          artistsChain={artistsChain ?? ''}
+          imageUrl={current_track.album.images[0].url}
+          trackName={current_track.name}
+        /> : <PlayerTrackInfoLoading />}
 
         <div className="flex gap-3 items-center justify-center">
           <button 
