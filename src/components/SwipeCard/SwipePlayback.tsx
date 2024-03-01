@@ -8,6 +8,9 @@ import { SwipePlaybackLoading } from './SwipePlaybackLoading';
 import { $playlistPicked } from '../../store/playlist';
 import { useStore } from '@nanostores/react';
 import VolumeController from '../VolumeController';
+import PlayerTrackInfoLoading from '../PlayerTrackInfoLoader';
+import PlayerTrackInfo from '../PlayerTrackInfo';
+import { SongController } from '../SongController';
 declare global {
   interface Window {
     onSpotifyWebPlaybackSDKReady: () => void;
@@ -43,6 +46,7 @@ type Track = {
   artists: {
     name: string;
   }[];
+  duration_ms: number;
 };
 
 type PlayerState = {
@@ -60,6 +64,7 @@ type Player = {
   nextTrack: () => void;
   previousTrack: () => void;
   setVolume: (value:number) => void;
+  seek: (value:number) => void;
 };
 
 const handleChangeSong = async (spotify_access_token:string, action:(() => void) | undefined, setPlayerError: (value: React.SetStateAction<string | null>) => void
@@ -92,14 +97,16 @@ type props= {
 
 export function SwipePlayback({spotify_access_token, children}: props) {
   const [player, setPlayer] = useState<Player|null>(null);
-  const [is_paused, setPaused] = useState(false);
+  const [is_paused, setPaused] = useState(true);
   const [current_track, setTrack] = useState<Track | null>(null);
+
   const playlistPick = useStore($playlistPicked);
   const [loadingSong, setLoadingSong] = useState(false);
   const [playerError, setPlayerError] = useState<string|null>(null);
   const [notify, setNotify] = useState<string|null>(null);
   const [handleAddToPlaylist] = usePlaylist(spotify_access_token!, playlistPick);
   const [genre, setGenre] = useState<string>('all');
+  const artistsChain = current_track?.artists.map(artist => artist.name).join(', ');
     
   useEffect(() => {
       const script = document.createElement("script");
@@ -200,7 +207,7 @@ export function SwipePlayback({spotify_access_token, children}: props) {
     </div>
 
 
-    <div className='grid place-content-center lg:-mt-28 relative'>
+    <div className='grid place-content-center lg:-mt-28 relative lg:mb-14'>
               {current_track && !loadingSong ? (
               <div className='drop-shadow-2xl relative p-3 w-[325px] lg:w-[400px] lg:h-[450px] h-[415px] flex flex-col gap-1 items-center justify-center rounded-sm overflow-hidden bg-zinc-900 border border-zinc-800'>
                   <SwipePlaybackCard  
@@ -208,7 +215,7 @@ export function SwipePlayback({spotify_access_token, children}: props) {
                     actionLeft={nextSongToQueue} 
                       artist={current_track.artists[0].name} 
                       name={current_track.name} 
-                      url={current_track.album.images[0].url}/>
+                      url={current_track.album.images[2]?.url ??  current_track.album.images[1]?.url ?? current_track.album.images[0].url }/>
                   
                   <div className='lg:hidden flex gap-6 lg:gap-3 items-center justify-center p-4 absolute bottom-0'>
                     <button onClick={nextSongToQueue} >
@@ -232,33 +239,45 @@ export function SwipePlayback({spotify_access_token, children}: props) {
             {notify && <Toast type="success" message={notify}  />}
     </div>
 
-    <div className='hidden lg:flex gap-6 lg:gap-3  items-center justify-center p-4 fixed bg-zinc-800 h-[65px] bottom-0 w-full'>
-        {/* <div>
-          asd
-        </div> */}
+    <footer className='hidden border-t border-zinc-600 lg:flex gap-6 lg:gap-3  items-center justify-center p-4 fixed bg-zinc-800 h-[70px] bottom-0 w-full'>
+        {current_track && !loadingSong ? <PlayerTrackInfo
+          artistsChain={artistsChain ?? ''}
+          imageUrl={current_track.album.images[0].url}
+          trackName={current_track.name}
+        /> : <PlayerTrackInfoLoading />}
 
-        <div className="flex gap-3 items-center justify-center">
-          <button 
-          onClick={nextSongToQueue}
-          >
-                <Dislike className='hover:scale-105 transition-transform'/>
-          </button>
-    
-          <button className="border p-2 rounded-full hover:border-accent-light transition-colors" onClick={() => { player?.togglePlay() }} >
-              { is_paused ? 
-                <Play/>
-              : <Pause/> }
-          </button>
-    
-          <button 
-          onClick={addSongToPlaylist}
-          >
-                <Like className='hover:scale-105 transition-transform'/>
-          </button>
+
+        <div className='flex flex-col gap-1 items-center justify-center'>
+          <div className="flex gap-3 items-center justify-center">
+            <button 
+            onClick={nextSongToQueue}
+            >
+                  <Dislike className='hover:scale-105 transition-transform'/>
+            </button>
+      
+            <button className="border p-2 rounded-full hover:border-accent-light transition-colors" onClick={() => { player?.togglePlay() }} >
+                { is_paused ? 
+                  <Play/>
+                : <Pause/> }
+            </button>
+      
+            <button 
+            onClick={addSongToPlaylist}
+            >
+                  <Like className='hover:scale-105 transition-transform'/>
+            </button>
+          </div>
+
+          <SongController
+            action={(value) => player?.seek(value)}
+            durationInSeconds={current_track?.duration_ms ? current_track.duration_ms / 1000 : 0}
+            trackId={current_track?.id ?? crypto.randomUUID()}
+            isPlaying={!is_paused}
+          />
         </div>
 
         <VolumeController action={(value) => player?.setVolume(value)} />
-      </div>
+      </footer>
   </main>
    )
 }
