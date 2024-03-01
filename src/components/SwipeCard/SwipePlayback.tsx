@@ -94,7 +94,7 @@ type props= {
 
 export function SwipePlayback({spotify_access_token, children}: props) {
   const [player, setPlayer] = useState<Player|null>(null);
-  const [is_paused, setPaused] = useState(false);
+  const [is_paused, setPaused] = useState(true);
   const [current_track, setTrack] = useState<Track | null>(null);
 
   const playlistPick = useStore($playlistPicked);
@@ -237,21 +237,6 @@ export function SwipePlayback({spotify_access_token, children}: props) {
     </div>
 
     <footer className='hidden border-t border-zinc-600 lg:flex gap-6 lg:gap-3  items-center justify-center p-4 fixed bg-zinc-800 h-[65px] bottom-0 w-full'>
-        <div className='flex gap-2 items-center justify-center absolute left-3 '>
-          <div className='w-12 h-12 rounded-md shadow-xl overflow-hidden'>
-                <img className='w-full' src={current_track?.album.images[0].url} alt="" />
-          </div>
-
-          <div className='text-base'>
-            <h4>
-              {current_track?.name && current_track.name.length > 50 ? current_track?.name.slice(0, 50) + '...' : current_track?.name}
-            </h4>
-            <p className='text-zinc-300 text-sm' title={artistsChain}>
-              {artistsChain && artistsChain.length > 60 ? artistsChain.slice(0, 50) + '...' : artistsChain}
-            </p>
-          </div>
-        </div>
-
         {current_track && !loadingSong ? <PlayerTrackInfo
           artistsChain={artistsChain ?? ''}
           imageUrl={current_track.album.images[0].url}
