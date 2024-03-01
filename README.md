@@ -1,5 +1,5 @@
 **SPOTYNDER!**   
-![](https://LinkToImage)
+![](https://res.cloudinary.com/dkjkgri6x/image/upload/v1709333237/spotynder.png)
 
 ## Live site
 - Live Site URL: https://spotynder.vercel.app/
