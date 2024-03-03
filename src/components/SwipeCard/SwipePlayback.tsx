@@ -207,9 +207,9 @@ export function SwipePlayback({spotify_access_token, children}: props) {
     </div>
 
 
-    <div className='grid place-content-center lg:-mt-28 relative lg:mb-14'>
+    <div className='grid place-content-center lg:-mt-28 relative mb-6'>
               {current_track && !loadingSong ? (
-              <div className='drop-shadow-2xl relative p-3 w-[325px] lg:w-[400px] lg:h-[450px] h-[415px] flex flex-col gap-1 items-center justify-center rounded-sm overflow-hidden bg-zinc-900 border border-zinc-800'>
+              <div className='drop-shadow-2xl relative p-3 w-[325px] lg:w-[400px] lg:h-[425px] h-[415px] flex flex-col gap-1 items-center justify-center rounded-sm overflow-hidden bg-zinc-900 border border-zinc-800'>
                   <SwipePlaybackCard  
                     actionRight={addSongToPlaylist}
                     actionLeft={nextSongToQueue} 
