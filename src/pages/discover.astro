@@ -26,6 +26,9 @@ if (error || !cookies.has('spotify-access-token')) {
   cookies.delete("sb-refresh-token", {
     path: "/",
   });
+  cookies.delete("spotify-access-token", {
+    path: "/",
+  });
 
   return redirect("/");
 }
@@ -43,9 +46,11 @@ const fetchOptions = {
 };
 
 // Obtendriamos las playlist del usuario para que pueda luego cambiar de playlist a la que quiera``
-const userPlaylistsPromise:Promise<{items:PlaylistItem[]}> = fetch(`https://api.spotify.com/v1/me/playlists`, fetchOptions)
+const userPlaylistsPromise:Promise<{items:PlaylistItem[]|null}> = fetch(`https://api.spotify.com/v1/me/playlists`, fetchOptions)
   .then(response => response.json())
   .then(data => {
+    if (!data.items) return { items: null };
+
     const filteredItems = data.items.filter((playlist: PlaylistItem) => 
       playlist.owner.id === user.data.user?.user_metadata.provider_id
     );
@@ -53,6 +58,10 @@ const userPlaylistsPromise:Promise<{items:PlaylistItem[]}> = fetch(`https://api.
   });
 
 const { items: userplaylists } = await userPlaylistsPromise;
+
+if (!userplaylists) {
+  return redirect("/");
+}
 ---
 
 <Layout title="Discover">
