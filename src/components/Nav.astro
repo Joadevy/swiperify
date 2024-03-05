@@ -1,32 +1,18 @@
 ---
-import type { Device } from "../lib/types";
-
-const { cookies, url, redirect } = Astro;
+const { cookies, redirect } = Astro;
 
 const accessToken = cookies.has("sb-access-token");
 const refreshToken = cookies.has("sb-refresh-token");
 const spotifyAccess = cookies.has('spotify-access-token')
 const userLoggedIn = accessToken && refreshToken && spotifyAccess;
-const currentDevice = cookies.get("spotify-device");
-const currentDeviceValues:Device | null = currentDevice?.value ? JSON.parse(currentDevice.value) : null;
 ---
 <nav class="flex justify-between p-1 absolute top-0 w-full">
-	<a href="/" class="flex items-center hover:opacity-70 transition-opacity">
-		<!-- <h2>
-			Spotynder
-		</h2> -->
-        <img src="../../../favicon.png" alt="">
+	<a href="/" class="flex items-center hover:opacity-70 transition-opacity">        <img src="../../../favicon.png" alt="">
     </a>
     {userLoggedIn ?(
 			<div class="flex items-center justify-center gap-2">
         
 				<form action="/api/auth/signout" class="flex items-center justify-center gap-2">
-					{ currentDeviceValues ? 
-						<div class=" border-b border-b-accent-light px-4 text-gray-300 text-base">
-							Connected to
-								{currentDeviceValues.name}
-						</div> 
-					: null }
           <button type="submit" class="flex items-center hover:opacity-75 transition-opacity text-gray-400">
 						Sign out
         	</button>
