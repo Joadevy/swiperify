@@ -1,4 +1,5 @@
 ---
+
 const { cookies, redirect } = Astro;
 
 const accessToken = cookies.has("sb-access-token");
@@ -13,9 +14,9 @@ const userLoggedIn = accessToken && refreshToken && spotifyAccess;
 			<div class="flex items-center justify-center gap-2">
         
 				<form action="/api/auth/signout" class="flex items-center justify-center gap-2">
-          <button type="submit" class="flex items-center hover:opacity-75 transition-opacity text-gray-400">
+					<button type="submit" class="flex items-center hover:opacity-75 transition-opacity text-gray-400">
 						Sign out
-        	</button>
+					</button>
         </form>
 			</div>
     ):(		
