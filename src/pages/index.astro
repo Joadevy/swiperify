@@ -1,11 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
-import Logout from '../components/Logout';
 export const prerender = true;
-
-const {url} = Astro;
-const isLoggingOut = url.searchParams.get('logout');
 ---
 
 <Layout title="Spotynder">
@@ -38,8 +34,6 @@ const isLoggingOut = url.searchParams.get('logout');
 				body="Because it&apos;s a mix of Spotify and Tinder. Swipe right to add to your playlist, swipe left to skip."
 			/>
 		</ul>
-
-		{isLoggingOut && <Logout client:load />}
 	</main>
 </Layout>
 

@@ -1,4 +1,6 @@
 ---
+import LogoutModal from "./Logout";
+
 
 const { cookies, redirect } = Astro;
 
@@ -11,14 +13,7 @@ const userLoggedIn = accessToken && refreshToken && spotifyAccess;
 	<a href="/" class="flex items-center hover:opacity-70 transition-opacity">        <img src="../../../favicon.png" alt="">
     </a>
     {userLoggedIn ?(
-			<div class="flex items-center justify-center gap-2">
-        
-				<form action="/api/auth/signout" class="flex items-center justify-center gap-2">
-					<button type="submit" class="flex items-center hover:opacity-75 transition-opacity text-gray-400">
-						Sign out
-					</button>
-        </form>
-			</div>
+					<LogoutModal client:load />			
     ):(		
         <form action="/api/auth/signin" method="post">
             <button class="link-btn" type="submit">Sign In</button>
