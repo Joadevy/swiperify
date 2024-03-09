@@ -19,7 +19,7 @@ if (error) {
   return new Response(null, {
     status: 302,
     headers: {
-      location: "/?logout=true"
+      location: "/"
     }
   });
 };
