@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { supabase } from "../../../lib/supabase";
 
-export const GET: APIRoute = async ({ cookies, redirect }) => {
+export const GET: APIRoute = async ({ cookies }) => {
   const { error } = await supabase.auth.signOut({
     scope:"global"
   });
@@ -16,5 +16,10 @@ if (error) {
   cookies.delete('spotify-refresh-token', {path: '/'});
 
 
-  return redirect("/");
+  return new Response(null, {
+    status: 302,
+    headers: {
+      location: "/?logout=true"
+    }
+  });
 };
