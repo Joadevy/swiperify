@@ -29,11 +29,12 @@ if (error || !cookies.has('spotify-access-token')) {
   cookies.delete("spotify-access-token", {
     path: "/",
   });
-
+  
   return redirect("/");
 }
 
 const user = await supabase.auth.getUser()
+const isPremium = cookies.get("is-premium")?.value === "true";
 
 // const user = await supabase.auth.getUser()
 const spotify_access_token = cookies.get("spotify-access-token")?.value;
@@ -74,9 +75,20 @@ if (!userplaylists) {
       
       <main> 
         <div class="mt-4">
-          <SwipePlayback spotify_access_token={spotify_access_token ?? ""} playlist_id={playlist_id!} client:load>
-            <SelectPlaylist playlists={userplaylists} playlistIdFromURLParam={playlist_id ?? ""} client:load/>
-          </SwipePlayback>
+          
+          {
+            !isPremium ? (
+              <header class="flex flex-col gap-2">
+                <div class=" bg-tinder-red bg-opacity-75 p-4 rounded-lg text-white text-center">
+                  <p class="text-lg">We apologize, but you need to have a premium Spotify account to use this feature. This is a Spotify policy and is not within our control; it's necessary to enable the streaming of content from your account to us.</p>
+                </div>
+              </header>
+            )
+            :
+            (<SwipePlayback spotify_access_token={spotify_access_token ?? ""} playlist_id={playlist_id!} client:load>
+              <SelectPlaylist playlists={userplaylists} playlistIdFromURLParam={playlist_id ?? ""} client:load/>
+            </SwipePlayback>
+          )}
         </div>
         </main>
     </div>
