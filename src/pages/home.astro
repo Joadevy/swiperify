@@ -1,6 +1,7 @@
 ---
 import PlayListCreate from "../components/PlayListCreate.astro";
 import PlayListPick from "../components/PlayListPick.astro";
+import FreePlanModal from "../components/FreePlanModal";
 import Layout from "../layouts/Layout.astro";
 import { supabase } from "../lib/supabase";
 import type { PlaylistItem } from "../lib/types";
@@ -32,6 +33,7 @@ if (error || !cookies.has('spotify-access-token')) {
 
 const user = await supabase.auth.getUser()
 const spotify_access_token = cookies.get("spotify-access-token")?.value;
+const isPremium = cookies.get("is-premium")?.value === "true";
 
 const {items: userplaylists} : { items: PlaylistItem[] } = await fetch(`https://api.spotify.com/v1/me/playlists`,{
    headers: {
@@ -70,6 +72,8 @@ const {items: userplaylists} : { items: PlaylistItem[] } = await fetch(`https://
             </ul>
         </div>
     </div>
+
+    {!isPremium && <FreePlanModal client:load />}
 </Layout>
 
 <style>

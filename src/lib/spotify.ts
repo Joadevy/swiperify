@@ -63,7 +63,6 @@ export const getRandomTrackUri = async (spotifyToken:string, genre:string,amount
 }
 
  export const queueNewSong = async (spotifyToken:string,context_uri:string) => {
-  console.log(context_uri)
         const response:{
           ok:boolean;
           status:number;
