@@ -181,7 +181,6 @@ export function SwipePlayback({spotify_access_token, children}: props) {
   const addSongToPlaylist = async() => { 
     if (!current_track) return;
     setLoadingSong(true);
-    console.log('se le paso: ',current_track.name)
     const addResponse = await handleAddToPlaylist([current_track.uri]);
     if (!addResponse.ok) setPlayerError('We could not add the song to the playlist. Please try again or reload the page.');
     else {

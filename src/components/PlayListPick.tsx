@@ -14,13 +14,7 @@ export const PickPlaylist = ({ playlist }: Props) => {
     const handleSelect = () => {
         changePlaylistStored(playlist.id);
         clientRedirect('newMusic', {p: playlist.id});
-    }
-
-    // useEffect(() => {
-        console.log('playlist picked', $store);
-    // }
-    // , [$store]);
-    
+    }    
   return (
     <button onClick={handleSelect} className="p-2 bg-accent-light w-full bg-opacity-30 h-full">
         <p className="leading-none" >
