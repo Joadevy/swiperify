@@ -4,9 +4,9 @@ import Card from '../components/Card.astro';
 export const prerender = true;
 ---
 
-<Layout title="Spotynder">
+<Layout title="Swiperify">
 	<main>
-		<h1 class="text-gradient">Spotynder</h1>
+		<h1 class="text-gradient">Swiperify</h1>
 		<div class="instructions flex flex-col gap-1 -mt-5">
 			<form action="/api/auth/signin" method="post" class="w-fit">
 				We&apos;re happy to have you here! To get started, enter with your
@@ -18,7 +18,7 @@ export const prerender = true;
 		</div>
 		<ul role="list" class="link-card-grid">
 			<Card
-				title="What is spotynder?"
+				title="What is Swiperify?"
 				body="An app that allows you to find your next favorite song to add to your playlist."
 			/>
 			<Card
@@ -30,7 +30,7 @@ export const prerender = true;
 				body="We need to know who you are so we can add songs to your playlist. We don&apos;t store any of your data."
 			/>
 			<Card
-				title="Why spotynder?"
+				title="Why Swiperify?"
 				body="Because it&apos;s a mix of Spotify and Tinder. Swipe right to add to your playlist, swipe left to skip to the next one."
 			/>
 		</ul>
