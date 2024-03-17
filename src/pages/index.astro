@@ -2,14 +2,40 @@
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
 export const prerender = true;
+import { supabase } from "../lib/supabase";
+import {AccessFormModal} from "../components/AccessFormModal";
+
+
+const { cookies, redirect } = Astro;
+
+const accessToken = cookies.get("sb-access-token");
+const refreshToken = cookies.get("sb-refresh-token");
+let userHasAccess = false;
+
+
+
+if (accessToken && refreshToken) {
+	userHasAccess = true;
+	const { data, error } = await supabase.auth.setSession({
+		refresh_token: refreshToken.value,
+		access_token: accessToken.value,
+	});
+
+	if (error || !cookies.has("spotify-access-token")) {
+		userHasAccess = false;
+	}
+}
+
+console.log(userHasAccess)
 ---
 
 <Layout title="Swiperify">
 	<main>
+		{!userHasAccess && <AccessFormModal client:load/>}
 		<h1 class="text-gradient">Swiperify</h1>
 		<div class="instructions flex flex-col gap-1 -mt-5">
 			<form action="/api/auth/signin" method="post" class="w-fit">
-				We&apos;re happy to have you here! To get started, enter with your
+				We&apos;re happy to have you here! To get started and after you've been added to the access-list, enter with your
 					<button value="spotify" name="provider" type="submit" class="hover:opacity-75 transition-opacity">
 						<code>Spotify</code>
 					</button>
@@ -26,8 +52,8 @@ export const prerender = true;
 				body={`Unfortunately, yes. We need to stream songs from your Spotify account, and they don't permit that without a premium account.`}
 			/>
 			<Card
-				title="Why do I need to login?"
-				body="We need to know who you are so we can add songs to your playlist. We don&apos;t store any of your data."
+				title="What do I need to login?"
+				body="In first place, we need to know your spotify's associated email that we can add you to the spotfy user-admission list because the app is in dev mode. We don&apos;t store any of your data."
 			/>
 			<Card
 				title="Why Swiperify?"
