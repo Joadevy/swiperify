@@ -6,6 +6,12 @@ type SignUpData = {
   emailToRegister: string,
 };
 
+const preventInputDefault = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  if (event.key === 'Enter') {
+      event.preventDefault();
+  }
+}
+
 export function AccessFormModal() {
   const [isOpen, setIsOpen] = useState(true);
   const {register, handleSubmit, formState:{errors}} = useForm({
@@ -42,12 +48,13 @@ export function AccessFormModal() {
     };
   }, []); 
 
-  const handleCreatePlaylist = async (data: SignUpData) => {
+  const handleSendRegisterInformation = async (data: SignUpData) => {
+    console.log('hey', data)
     const response:{
       ok: boolean,
       status: number,
       json: () => Promise<null>
-    } = await fetch(`/api/register`, {
+    } = await fetch(`/api/register/sendEmail`, {
       method: 'POST',
       body: JSON.stringify({
         message: data.message,
@@ -77,14 +84,36 @@ export function AccessFormModal() {
               this is the only way until Spotify approves the app for public access.</span>
             </p>
 
+              <form className='flex flex-col gap-4 my-2' onSubmit={handleSubmit((data) => {
+              handleSendRegisterInformation(data)})}>
+                <label className='flex flex-col gap-1' htmlFor="Email">
+                  <p>
+                    Spotify Email
+                    <span className={errors.emailToRegister ? 'ml-1 text-tinder-red' : 'ml-1 text-accent-light'}> 
+                      *
+                    </span>
+                  </p>
+                  <input onKeyDown={preventInputDefault} className={'text-zinc-800 rounded-sm px-2 py-1 placeholder:text-sm outline-none focus:outline-accent-light ' + (errors.emailToRegister ? 'focus:outline-tinder-red' : '')} {...register("emailToRegister",{required:"Email is required",  pattern: {
+            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+            message: "Invalid email address"
+          }})} id="Email" type="text" placeholder="Type your spotify's email..." />
+                </label>
+                {errors.emailToRegister && <span className='text-tinder-red text-sm'>{errors.emailToRegister.message}</span>}
+
+                <label className='flex flex-col gap-1' htmlFor="Description"> Optional message
+                    <textarea className='resize-y max-h-24  text-zinc-800 rounded-sm px-2 py-1 placeholder:text-sm outline-none focus:outline-accent-light' placeholder="Type an optional message to me..."   {...register("message")} id="Message"></textarea>
+                </label>
+             
             <footer className='flex text-base justify-between'>
-              <button type='submit' onClick={() => {}} className="px-2 py-1 bg-accent-light text-zinc-800 rounded-sm hover:scale-105 hover:cursor-pointer transition-all hover:opacity-85'">
+              <button type='submit' className="px-2 py-1 bg-accent-light text-zinc-800 rounded-sm hover:scale-105 hover:cursor-pointer transition-all hover:opacity-85'">
                 Let me in!
               </button>
               <button onClick={closeModal} className="bg-zinc-700 py-1 px-2 rounded-sm hover:opacity-75 transition-opacity">
                 Close
               </button>
             </footer>
+            </form>
+
           </div>
         </dialog>
       )}
