@@ -1,6 +1,6 @@
 ---
 import LogoutModal from "./Logout";
-
+import { AccessFormModal } from "./AccessFormModal";
 
 const { cookies, redirect } = Astro;
 
@@ -10,25 +10,27 @@ const spotifyAccess = cookies.has('spotify-access-token')
 const userLoggedIn = accessToken && refreshToken && spotifyAccess;
 ---
 <nav class="flex justify-between p-1 absolute top-0 w-full">
-	<a href="/" class="flex items-center hover:opacity-70 transition-opacity">        <img src="../../../favicon.png" alt="">
-    </a>
+	<a href="/" class="flex items-center hover:opacity-70 transition-opacity">   
+		<img src="../../../favicon.png" alt="">
+  </a>
     {userLoggedIn ?(
 					<LogoutModal client:load />			
     ):(		
-        <form action="/api/auth/signin" method="post">
+			<div class="flex items-center gap-1">
+				<AccessFormModal withButton={true} client:load/>
+				<form action="/api/auth/signin" method="post">
             <button class="link-btn" type="submit">Sign In</button>
-        </form> 
+        </form> 			
+			</div>
     )}
 </nav>
 <style>
 	.link-btn {
-        border: 1px solid rgba(var(--accent-light), 25%);
+        border: 1px solid rgba(var(--accent-light), 75%);
 		background: linear-gradient(45deg, rgba(var(--accent-dark), 75%), rgba(var(--tinder-red), 25%));
 		display: flex;
-		padding: 1px;
-
-        padding-left: 5px;
-        padding-right: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
 		background-size: 400%;
 		border-radius: 7px;
 		background-position: 100%;
@@ -45,10 +47,6 @@ const userLoggedIn = accessToken && refreshToken && spotifyAccess;
 		margin-bottom: 0;
 	}
 	.link-btn:is(:hover, :focus-within) {
-		background-position: 0;
-		background-image: var(--accent-gradient-variant);
-	}
-	.link-btn:is(:hover, :focus-within) h2 {
-		color: rgb(var(--accent-light));
+		opacity:75%;
 	}
 </style>
