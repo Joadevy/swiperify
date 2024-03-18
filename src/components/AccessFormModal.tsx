@@ -74,28 +74,23 @@ export function AccessFormModal({withButton}:Props) {
 
   const handleSendRegisterInformation = async (data: SignUpData) => {
     setSendingEmail(true);
-    setTimeout(() => {
-      setEmailSent(true);
+    const response:{
+      message:string,
+      status:number
+    } = await fetch(`/api/register/sendEmail`, {
+      method: 'POST',
+      body: JSON.stringify({
+        message: data.message,
+        emailToRegister: data.emailToRegister,
+      })
+    }).then(res => res.json());
+
+      if (response.status === 200) {
+        setEmailSent(true);
+        closeModal();
+      } else setErrorOnEmail(true);
+
       setSendingEmail(false);
-      closeModal();
-    }, 6000);
-    // const response:{
-    //   message:string,
-    //   status:number
-    // } = await fetch(`/api/register/sendEmail`, {
-    //   method: 'POST',
-    //   body: JSON.stringify({
-    //     message: data.message,
-    //     emailToRegister: data.emailToRegister,
-    //   })
-    // }).then(res => res.json());
-
-    //   if (response.status === 200) {
-    //     setEmailSent(true);
-    //     closeModal();
-    //   } else setErrorOnEmail(true);
-
-      // setSendingEmail(false);
     }
 
   return (
