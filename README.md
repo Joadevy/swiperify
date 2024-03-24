@@ -1,6 +1,6 @@
 **SWIPERIFY!**   
 ![](https://res.cloudinary.com/dkjkgri6x/image/upload/v1709333237/spotynder.png)
-<a href="https://asset.cloudinary.com/dkjkgri6x/52e8fc8839b4c5e3b62c5453f0762a15" target="_blank">Link to watch video demo</a>
+<a href="https://res.cloudinary.com/dkjkgri6x/video/upload/v1711239658/Swiperify_blured_xzqwsd.mp4" target="_blank">Link to watch video demo</a>
 
 ## Live site
 - Live Site URL: https://swiperify.vercel.app/
